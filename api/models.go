@@ -69,6 +69,9 @@ type UserTodo struct {
 
 	PomodoroCount int
 	Pomodoros []Pomodoro // One-To-Many relationship (has many)
+
+	PomodoroStarted int
+	PomodoroCompleted int
 }
 
 // This struct is mainly for tracking stats
@@ -81,4 +84,6 @@ type Pomodoro struct {
 	StartedAt time.Time
 	EndedAt time.Time
 
+	Completed bool
+	// Interruptions int
 }

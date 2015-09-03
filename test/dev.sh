@@ -29,15 +29,27 @@ apicall() {
 # apicall GET .status '{}'
 
 
-apicall GET todo '{}'
-apicall GET todo/0 '{}'
+# apicall GET todo '{}'
+# apicall GET todo/0 '{}'
 
-apicall POST todo '{"name": "todo3", "description": "description"}'
+# apicall POST todo '{"name": "todo3", "description": "description"}'
 
-apicall GET todo/2 '{}'
+# apicall GET todo/2 '{}'
 
-apicall PUT todo/2 '{"description": "blah blah blah"}'
+# apicall PUT todo/2 '{"description": "blah blah blah"}'
 
-apicall GET todo/2 '{}'
+# apicall GET todo/2 '{}'
 
 # apicall DELETE todo/2 '{}'
+
+
+
+
+# apicall GET todo/52 '{}'
+# apicall POST todo/52/pomo_start '{}'
+# apicall GET todo/52 '{}'
+# apicall PUT todo/52/pomo_stop '{}'
+# apicall GET todo/52 '{}'
+# apicall DELETE todo/52 '{}'
+
+

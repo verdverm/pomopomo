@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jinzhu/gorm"
@@ -193,7 +194,6 @@ func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
 
 	err = db.Save(todo).Error
 	if err != nil {
-		log.Println("JSON error: ", err.Error())
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
@@ -231,6 +231,119 @@ func DeleteTodo(w rest.ResponseWriter, req *rest.Request) {
 
 	w.WriteJson(map[string]interface{}{"result": "success!", "tid": todo.ID})
 }
+
+func StartPomodoro(w rest.ResponseWriter, req *rest.Request) {
+	id_str := req.PathParam("id")
+	id, ierr := strconv.Atoi(id_str)
+	if ierr != nil {
+		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
+		return
+	}
+	uuid := getUuid(w,req);
+
+	// get / check existing todo
+	todo := UserTodo{}
+	err := db.Where("uuid = ?", uuid).First(&todo, id).Error
+	if err == gorm.RecordNotFound {
+		log.Println("Todo NOT FOUND!!!")
+		rest.Error(w, "todo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Is there a Pomodoro that is already in process? or started, but not ended?
+	// Several ways to check (query pomos, check todo values), ought to do multiple of them
+
+	// create the Pomodoro
+	pomo := Pomodoro{}
+	pomo.Uuid = uuid
+	pomo.TodoID = todo.ID
+	pomo.StartedAt = time.Now()
+
+	// increment the UserTodo Pomodoro counters
+	todo.PomodoroStarted++
+
+	// save stuff to DB
+	// wrap in TXN
+	err = db.Save(todo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = db.Create(&pomo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(map[string]interface{}{"result": "pomo started", "tid": todo.ID})
+}
+
+func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
+	id_str := req.PathParam("id")
+	id, ierr := strconv.Atoi(id_str)
+	if ierr != nil {
+		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
+		return
+	}
+	uuid := getUuid(w,req);
+
+	// get / check existing todo
+	todo := UserTodo{}
+	err := db.Where("uuid = ?", uuid).First(&todo, id).Error
+	if err == gorm.RecordNotFound {
+		rest.Error(w, "todo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// get / check the Pomodoro
+	pomo := Pomodoro{}
+	err = db.Where("uuid = ?", uuid).Where("todo_id = ?", id).Where("completed = ?", false).Order("started_at desc, ended_at").First(&pomo).Error
+	if err == gorm.RecordNotFound {
+		rest.Error(w, "pomo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Validate time is ~~ 25 minutes
+	now := time.Now()
+
+	// update the UserTodo / Pomodoro 
+	todo.PomodoroCount++
+	todo.PomodoroCompleted++
+	
+	pomo.EndedAt = now
+	pomo.Completed = true
+
+	// save stuff to DB
+	// wrap in TXN in prod
+	err = db.Save(todo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = db.Save(&pomo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(map[string]interface{}{"result": "pomo ended", "tid": todo.ID})
+}
+
+
+
+
+
 
 
 

@@ -69,8 +69,8 @@ func init() {
 		&rest.Route{"PUT", "/todo/:id", UpdateTodo},
 		&rest.Route{"DELETE", "/todo/:id", DeleteTodo},
 
-		// &rest.Route{"POST", "/pomo", StartPomodoro},
-		// &rest.Route{"PUT", "/pomo", StopPomodoro},
+		&rest.Route{"POST", "/todo/:id/pomo_start", StartPomodoro},
+		&rest.Route{"PUT", "/todo/:id/pomo_stop", StopPomodoro},
 
 	)
 	main_api.SetApp(main_api_router)

@@ -38,6 +38,51 @@ frisby.create('POST new todo')
       })
     .toss();
 
+    frisby.create('GET pomo start')
+      .post(URL + 'todo/' + result.tid + "/pomo_start")
+      .expectStatus(200)
+      .expectJSON({
+        result: 'pomo started',
+        tid: tid
+      })
+    .toss();
+
+    frisby.create('GET existing todo')
+      .get(URL + 'todo/' + result.tid)
+      .expectStatus(200)
+      .expectJSON({
+        id: tid,
+        Uuid: UUID,
+        PomodoroStarted: 1
+      })
+    .toss();
+
+    frisby.create('GET pomo stop')
+      .put(URL + 'todo/' + result.tid + "/pomo_stop")
+      .expectStatus(200)
+      .expectJSON({
+        result: 'pomo ended',
+        tid: tid
+      })
+    .toss();
+
+    frisby.create('GET existing todo')
+      .get(URL + 'todo/' + result.tid)
+      .expectStatus(200)
+      .expectJSON({
+        id: tid,
+        Uuid: UUID,
+        PomodoroStarted: 1,
+        PomodoroCompleted: 1,
+        PomodoroCount: 1
+      })
+    .toss();
+
+    frisby.create('Delete todo')
+      .delete(URL + 'todo/' + result.tid)
+      .expectStatus(200)
+    .toss();
+
 
 
   })
