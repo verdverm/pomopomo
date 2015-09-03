@@ -1,6 +1,7 @@
 var frisby = require('frisby');
 
 var URL = 'http://localhost:8080/api/';
+var UUID = 'c46157d-fb83-40d0-9b45-f4c33efd919'
 
 frisby.globalSetup({ // globalSetup is for ALL requests
   request: {
@@ -15,9 +16,80 @@ frisby.create('GET auth_test')
     authed: String
   })
   .expectJSON({
-    authed: 'c46157d-fb83-40d0-9b45-f4c33efd919'
+    authed: UUID
   })
 .toss();
+
+
+frisby.create('GET all todos')
+  .get(URL + 'todo')
+  .expectStatus(200)
+  // .expectJSON([])
+  .afterJSON(function(todos) {
+    // Use data from previous result in next test
+
+    for (var i = 0; i < todos.length; i++) {
+      var todo = todos[i];
+
+      // console.log(todo);
+
+      frisby.create('Delete todo ' + i)
+        .delete(URL + 'todo/' + todo.id)
+        .expectStatus(200)
+      .toss();
+      
+    };
+  })
+.toss();
+
+frisby.create('GET non-existant todo')
+  .get(URL + 'todo/0')
+  .expectStatus(400)
+  .expectJSON({
+    Error: "todo not found"
+  })
+.toss();
+
+frisby.create('POST new todo')
+  .post(URL + 'todo', {
+        name: "test todo",
+        description: "this is my first ever pomodoro todo!!"
+    }, {json: true})
+  .expectStatus(200)
+  .expectJSONTypes({
+    result: String,
+    tid: Number
+  })
+  .expectJSON({
+    result: "success!"  
+  })
+  .afterJSON(function(result){
+    // console.log(result);
+
+    frisby.create('GET existing todo')
+      .get(URL + 'todo/' + result.tid)
+      .expectStatus(200)
+      .expectJSON({
+        id: result.tid,
+        Uuid: UUID,
+        Name: 'test todo'
+      })
+    .toss();
+
+    frisby.create('Delete todo')
+      .delete(URL + 'todo/' + result.tid)
+      .expectStatus(200)
+    .toss();
+
+  })
+.toss();
+
+
+
+// frisby.create('GET .status')
+//   .get(URL + '.status')
+//   .expectStatus(200)
+// .toss()
 
 /*
 frisby.create('GET user johndoe')

@@ -72,7 +72,7 @@ func LoginHandler(w rest.ResponseWriter, req *rest.Request) {
 	// login to jwt and return token
 	// jwt_middleware.LoginHandler(w, req)
 	token := JWT.New(JWT.GetSigningMethod(jwt_middleware.SigningAlgorithm))
-	token.Claims["id"] = auth.Uid
+	token.Claims["id"] = auth.Uuid
 	token.Claims["exp"] = time.Now().Add(jwt_middleware.Timeout).Unix()
 	if jwt_middleware.MaxRefresh != 0 {
 		token.Claims["orig_iat"] = time.Now().Unix()
@@ -80,7 +80,7 @@ func LoginHandler(w rest.ResponseWriter, req *rest.Request) {
 	tokenString, err := token.SignedString(jwt_middleware.Key)
 
 	wire := UserWire{
-		Uid:   auth.Uid,
+		Uid:   auth.Uuid,
 		Token: tokenString,
 	}
 
@@ -160,7 +160,7 @@ okemail:
 	uid = uid[1 : len(uid)-1]
 
 	user := UserAuth{}
-	user.Uid = uid
+	user.Uuid = uid
 	user.Username = register.Username
 	user.Email = register.Email
 	user.HashedPassword, _ = bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
@@ -209,7 +209,7 @@ okemail:
 	// register to jwt and return token
 	// jwt_middleware.LoginHandler(w, req)
 	token := JWT.New(JWT.GetSigningMethod(jwt_middleware.SigningAlgorithm))
-	token.Claims["id"] = user.Uid
+	token.Claims["id"] = user.Uuid
 	token.Claims["exp"] = time.Now().Add(jwt_middleware.Timeout).Unix()
 	if jwt_middleware.MaxRefresh != 0 {
 		token.Claims["orig_iat"] = time.Now().Unix()

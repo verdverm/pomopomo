@@ -32,15 +32,15 @@ type UserWire struct {
 
 type DbBase struct {
 	ID        int       `json:"id"`
-	CreatedAt time.Time `json:"-"`
-	UpdatedAt time.Time `json:"-"`
-	DeletedAt time.Time `json:"-"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt time.Time
 }
 
 type UserAuth struct {
 	DbBase
 
-	Uid      string `json:"uid" sql:"index"`
+	Uuid      string `json:"uuid" sql:"index"`
 	Username string `json:"username" sql:"unique_index"`
 	Email    string `json:"email" sql:"unique_index"`
 
@@ -56,4 +56,29 @@ type UserAuth struct {
 
 	LastLoginAt  time.Time
 	LastLogoutAt time.Time
+}
+
+type UserTodo struct {
+	DbBase
+
+	// Uid from UserAuth, not the uuid 'Uid'
+	Uuid string `sql:"index"` // Foreign key (belongs to), tag `index` will create index for this field when using AutoMigrate
+
+	Name string
+	Description string
+
+	PomodoroCount int
+	Pomodoros []Pomodoro // One-To-Many relationship (has many)
+}
+
+// This struct is mainly for tracking stats
+type Pomodoro struct {
+	DbBase
+
+	Uuid string `sql:"index;index:idx_uid_tid"` // Foreign key (belongs to), tag `index` will create index for this field when using AutoMigrate
+	TodoID int `sql:"index:idx_uid_tid"` // Foreign key (belongs to), tag `index` will create index for this field when using AutoMigrate
+
+	StartedAt time.Time
+	EndedAt time.Time
+
 }

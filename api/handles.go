@@ -3,10 +3,11 @@ package main
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/ant0ine/go-json-rest/rest"
-	// "github.com/jinzhu/gorm"
+	"github.com/jinzhu/gorm"
 )
 
 // helper functions
@@ -30,7 +31,7 @@ func checkUid(uid string, w rest.ResponseWriter, req *rest.Request) bool {
 	return true
 }
 
-func getUid(w rest.ResponseWriter, req *rest.Request) string {
+func getUuid(w rest.ResponseWriter, req *rest.Request) string {
 	if req.Env["REMOTE_USER"] == nil {
 		rest.Error(w, "remote user is nil", http.StatusInternalServerError)
 		return ""
@@ -56,8 +57,181 @@ func CreateTables(w rest.ResponseWriter, req *rest.Request) {
 	log.Println("AutoMigrating - UserAuth!!!")
 	db.AutoMigrate(&UserAuth{})
 
-	// log.Println("AutoMigrating - Recipe!!!")
-	// db.AutoMigrate(&Recipe{})
+	log.Println("AutoMigrating - UserTodo!!!")
+	db.AutoMigrate(&UserTodo{})
+
+	log.Println("AutoMigrating - Pomodoro!!!")
+	db.AutoMigrate(&Pomodoro{})
 
 	w.WriteJson(map[string]string{"result": "success!"})
 }
+
+// This handle gets all of the todos for a user
+// no params are needed, as we can extract the uuid from the auth token
+func GetAllTodos(w rest.ResponseWriter, req *rest.Request) {
+	uuid := getUuid(w,req);
+
+	todos := []UserTodo{}
+	err := db.Where("uuid = ?", uuid).Find(&todos).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(&todos)	
+}
+
+// This handle gets a todo for a user by todo id
+// the id should be a path param:  GET /todo/<id>
+func GetTodo(w rest.ResponseWriter, req *rest.Request) {
+	id_str := req.PathParam("id")
+	id, ierr := strconv.Atoi(id_str)
+	if ierr != nil {
+		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
+		return
+	}
+	uuid := getUuid(w,req);
+
+	todo := UserTodo{}
+	err := db.Where("uuid = ?", uuid).First(&todo, id).Error
+	if err == gorm.RecordNotFound {
+		log.Println("Todo NOT FOUND!!!")
+		rest.Error(w, "todo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = db.Where("todo_id = ?", todo.ID).Find(&todo.Pomodoros).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(&todo)
+}
+
+// This handle creates a todo for a user
+func CreateTodo(w rest.ResponseWriter, req *rest.Request) {
+	uuid := getUuid(w,req);
+
+	log.Println("Unpacking data")
+	todo := UserTodo{}
+	err := req.DecodeJsonPayload(&todo)
+	if err != nil {
+		log.Println("JSON error: ", err.Error())
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("incoming todo: %+v", todo)
+
+	// Is this a new todo (by name) ?
+	unique := false
+	utodo := UserTodo{}
+	err = db.Where("uuid = ?", uuid).Where("name = ?", todo.Name).First(&utodo).Error
+	if err == gorm.RecordNotFound {
+		unique = true
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !unique {
+		w.WriteJson(&PomoError{Error: "name taken"})
+		return
+	}
+
+	// CREATE todo
+	log.Println("Name OK!!!")
+
+	todo.Uuid = uuid
+	err = db.Create(&todo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(map[string]interface{}{"result": "success!", "tid": todo.ID})
+}
+
+
+func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
+	id_str := req.PathParam("id")
+	id, ierr := strconv.Atoi(id_str)
+	if ierr != nil {
+		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
+		return
+	}
+	uuid := getUuid(w,req);
+
+	// Check for existing TODO
+
+	todo := UserTodo{}
+	err := db.Where("uuid = ?", uuid).First(&todo, id).Error
+	if err == gorm.RecordNotFound {
+		log.Println("Todo NOT FOUND!!!")
+		rest.Error(w, "todo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("existing todo: %+v", todo)
+
+	log.Println("Unpacking data")
+	// todo := UserTodo{}
+	err = req.DecodeJsonPayload(&todo)
+	if err != nil {
+		log.Println("JSON error: ", err.Error())
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	log.Println("merged todo: %+v", todo)
+
+	err = db.Save(todo).Error
+	if err != nil {
+		log.Println("JSON error: ", err.Error())
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(map[string]interface{}{"result": "success!", "tid": todo.ID})
+}
+
+func DeleteTodo(w rest.ResponseWriter, req *rest.Request) {
+	id_str := req.PathParam("id")
+	id, ierr := strconv.Atoi(id_str)
+	if ierr != nil {
+		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
+		return
+	}
+	uuid := getUuid(w,req);
+
+	dtodo := UserTodo{}
+	err := db.Where("uuid = ?", uuid).First(&dtodo, id).Error
+	if err == gorm.RecordNotFound {
+		log.Println("Todo NOT FOUND!!!")
+		rest.Error(w, "todo not found", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	todo := UserTodo{Uuid: uuid}
+	todo.ID = id
+	err = db.Delete(&todo).Error
+	if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteJson(map[string]interface{}{"result": "success!", "tid": todo.ID})
+}
+
+
+
+

@@ -62,18 +62,16 @@ func init() {
 			},
 		},
 
-		// // modifying endpoints
-		// &rest.Route{"POST", "/ingredient", CreateIngredient},
-		// &rest.Route{"POST", "/product", CreateProduct},
-		// &rest.Route{"POST", "/recipe", CreateRecipe},
+		&rest.Route{"GET", "/todo", GetAllTodos},
+		&rest.Route{"GET", "/todo/:id", GetTodo},
 
-		// // non-modifying endpoints
-		// &rest.Route{"GET", "/recipe/:id", GetRecipe},
-		// &rest.Route{"GET", "/recipe/cost/:id", GetRecipeCost},
+		&rest.Route{"POST", "/todo", CreateTodo},
+		&rest.Route{"PUT", "/todo/:id", UpdateTodo},
+		&rest.Route{"DELETE", "/todo/:id", DeleteTodo},
 
-		// &rest.Route{"GET", "/search/recipe/ingredient/:name", FindRecipeByIngredient},
-		// &rest.Route{"GET", "/search/recipe/category/:name", FindRecipeByCategory},
-		// &rest.Route{"GET", "/search/recipe/brand/:name", FindRecipeByBrand},
+		// &rest.Route{"POST", "/pomo", StartPomodoro},
+		// &rest.Route{"PUT", "/pomo", StopPomodoro},
+
 	)
 	main_api.SetApp(main_api_router)
 
