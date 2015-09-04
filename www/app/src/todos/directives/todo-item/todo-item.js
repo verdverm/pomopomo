@@ -18,23 +18,34 @@ angular.module("pomodoroTodoApp")
 .controller("TodoItemController", function($rootScope, $scope, $location, todoService) {
     var self = $scope;
 
-    self.show = false;
+    self.showDetails = false;
+    self.showEditable = false;
 
-    self.showDetails = function() {
-        return self.show;
-    }
 
     self.toggleDetails = function(event) {
         var pass = clickbuster.onClick(event);
         if (!pass) {
             return;
         }
-        console.log("todoClicked");
 
-        self.show = !self.show;
-        // $scope.$apply();
+        self.showDetails = !self.showDetails;
 
-        console.log("show details ? ", self.show)
+        console.log("show details ? ", self.showDetails)
+
+    }
+
+    self.toggleEditing = function(event) {
+        var pass = clickbuster.onClick(event);
+        if (!pass) {
+            return;
+        }
+        // not sure why, but this is the only icon handler clicking through
+        // and triggering the details as well...
+
+        self.showDetails = !self.showDetails;
+        self.showEditable = !self.showEditable;
+
+        console.log("show editing ? ", self.showEditable)
 
     }
 

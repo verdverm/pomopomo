@@ -1,5 +1,5 @@
-<div ng-controller="TodoItemController" hm-tap="toggleDetails()">
-	<md-list-item flex layout-padding layout="row" layout-align="center center">
+<div ng-controller="TodoItemController">
+	<md-list-item flex layout-padding layout="row" layout-align="center center" hm-tap="toggleDetails()">
 		
 		<div class="todo-item-category">
 			<!-- <md-menu md-offset="0 -7">
@@ -19,8 +19,9 @@
 			<p>{{todo.Description}}</p>
 		</div>
 
-		<div flex="25" class="todo-item-actions" layout="row" layout-align="space-around center">
+		<div flex="40" class="todo-item-actions" layout="row" layout-align="space-around center">
 			<span>Pomos: {{todo.PomodoroCompleted}}</span>
+			<ng-md-icon icon="mode_edit"        size="40" hm-tap="toggleEditing($event)"></ng-md-icon>
 			<ng-md-icon icon="alarm_add"        size="40" hm-tap="createAlarm($event)"></ng-md-icon>
 			<ng-md-icon icon="highlight_remove" size="40" hm-tap="deleteTodo($event)"></ng-md-icon>
 		</div>
@@ -28,9 +29,19 @@
 
 	</md-list-item>
 
-	<div class="item_details" flex layout="column" layout-padding ng-show="show">
+	<md-card class="item_details" flex layout="column" layout-padding ng-show="showDetails">
 		<p>Created At: {{todo.CreatedAt}}</p>
-	</div>
+	</md-card>
+	<md-card class="item_details" flex layout="column" layout-padding ng-show="showEditable">
+		<md-input-container>
+            <label>Todo Name</label>
+            <input ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
+        </md-input-container>
+		<md-input-container>
+            <label>Description</label>
+            <textarea ng-model="todo.Description" type="text" style="font-size: 1.2em;" />
+        </md-input-container>
+	</md-card>
 
 </div>
 
