@@ -12,10 +12,10 @@
     <link rel="stylesheet" href="assets/app.css" />
 </head>
 
-<body ng-app="pomodoroTodoApp" ng-controller="UserController as ul" layout="column" layout-fill>
+<body ng-app="pomodoroTodoApp" ng-controller="MenuController as menuCtrl" layout="column" layout-fill>
 
-    <md-toolbar layout="row" class="md-whiteframe-z1 md-primary md-hue-2">
-        <md-button class="menu" hide-gt-lg ng-click="ul.toggleList()" aria-label="Show User List">
+    <md-toolbar layout="row" class="md-whiteframe-z2 md-primary md-hue-2">
+        <md-button ng-show="menuCtrl.showLogout" class="menu" hide-gt-lg ng-click="menuCtrl.toggleMenu()" aria-label="Show User List">
             <md-icon md-svg-icon="menu"></md-icon>
         </md-button>
         <h1>Pomodoro Todo App</h1>
@@ -24,17 +24,22 @@
 
     <div flex layout="row">
 
-        <md-sidenav class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-lg')" layout="column" flex>
+        <md-sidenav ng-show="menuCtrl.showLogout" class="site-sidenav md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-lg')" layout="column" flex>
             <md-toolbar class="md-whiteframe-z1">
-                <h1>Users</h1>
+                <h1>Menu</h1>
             </md-toolbar>
             <md-list>
-                <md-list-item ng-repeat="it in ul.users">
-                    <md-button ng-click="ul.selectUser(it)" ng-class="{'selected' : it === ul.selected }">
-                        <md-icon md-svg-icon="{{it.avatar}}" class="avatar"></md-icon>
-                        {{it.name}}
-                    </md-button>
-                </md-list-item>
+              <md-list-item ng-click="menuCtrl.newTodo();" layout="row" layout-align="start center">
+                <ng-md-icon icon="my_library_add" style="fill: green"></ng-md-icon>
+                      New Todo
+              </md-list-item>
+
+              <md-divider></md-divider>
+
+              <md-list-item ng-click="menuCtrl.logout();" layout="row" layout-align="start center">
+                <ng-md-icon icon="logout"></ng-md-icon>
+                      Logout
+              </md-list-item>
             </md-list>
         </md-sidenav>
 
@@ -69,13 +74,11 @@
     <script src="./src/auth/controllers/login.js"></script>
     <script src="./src/auth/controllers/register.js"></script>
 
-    <script src="./src/js/controllers/main.js"></script>
-    
+    <script src="./src/js/controllers/menu.js"></script>
 
-
-    <script src="./src/users/Users.js"></script>
-    <script src="./src/users/UserController.js"></script>
-    <script src="./src/users/UserService.js"></script>
+    <script src="./src/todos/services/todo-service.js"></script>
+    <script src="./src/todos/controllers/todo-list.js"></script>
+    <script src="./src/todos/directives/todo-item/todo-item.js"></script>
 
 </body>
 

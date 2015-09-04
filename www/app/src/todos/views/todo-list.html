@@ -1,0 +1,18 @@
+
+<md-card ng-controller="TodoListController as listCtrl" layout-margin layout-fill>
+
+    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;">
+        <h1>Todo Items</h1>
+    </div>
+
+    <md-list layout="column" layout-align="start center" layout-fill>
+        
+
+
+        <todo-item flex="75" layout-fill todo="{'name':'todo 1', 'description':'desciption of todo 1'}"></todo-item>
+        <todo-item todo="{'name':'todo 2', 'description':'desciption of todo 2'}"></todo-item>
+        <todo-item todo="{'name':'todo 3', 'description':'desciption of todo 3'}"></todo-item>
+
+    </md-list>
+
+</md-card>

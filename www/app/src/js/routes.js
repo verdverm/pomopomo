@@ -24,7 +24,7 @@ angular.module('pomodoroTodoApp')
             // MAIN page
             .state('main', {
                 url: '/main',
-                templateUrl: 'src/templates/main.html'
+                templateUrl: 'src/todos/views/todo-list.html'
             })
 
 

@@ -1,0 +1,18 @@
+<md-list-item ng-controller="TodoItemController" flex layout-fill layout="row" layout-align="center center">
+	
+	<div class="todo-item-type-icon">
+		<ng-md-icon icon="place"></ng-md-icon>
+	</div>
+	
+	<div class="todo-item-text">
+		<h3>{{todo.name}}</h3>
+		<p>{{todo.description}}</p>
+	</div>
+
+	<div class="todo-item-actions" layout="row">
+		<ng-md-icon icon="alarm_add"></ng-md-icon>
+		<ng-md-icon icon="highlight_remove"></ng-md-icon>
+	</div>
+
+</md-list-item>
+<md-divider></md-divider>
