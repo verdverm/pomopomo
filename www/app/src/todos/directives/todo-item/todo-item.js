@@ -18,14 +18,24 @@ angular.module("pomodoroTodoApp")
 .controller("TodoItemController", function($rootScope, $scope, $location, todoService) {
     var self = $scope;
 
-    self.todoClicked = function(event) {
-        console.log("todoClicked: ", event);
+    self.show = false;
+
+    self.showDetails = function() {
+        return self.show;
+    }
+
+    self.toggleDetails = function(event) {
         var pass = clickbuster.onClick(event);
         if (!pass) {
             return;
         }
+        console.log("todoClicked");
 
-        console.log("todo clicked", self.todo)
+        self.show = !self.show;
+        // $scope.$apply();
+
+        console.log("show details ? ", self.show)
+
     }
 
     self.createAlarm = function(event) {
