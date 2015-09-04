@@ -60,6 +60,12 @@ md-list .md-button {
   right: 40px;
 }
 
+.md-button > ng-md-icon {
+  font-size: 2.8rem;
+  display: block;
+}
+
+/*
 #content md-icon.avatar {
   margin-top: 10px;
 }
@@ -82,6 +88,7 @@ md-button.menuBtn > md-icon {
   padding:4px;
   transition: all 100ms ease-out 30ms;
 }
+*/
 
 #content img {
   display: block;
@@ -128,3 +135,20 @@ span.name {
   font-size:1.1em;
   padding-left:5px;
 }
+
+
+
+.fabSpeedDialdemoMoreOptions .lock-size {
+  min-width: 300px;
+  min-height: 300px;
+  width: 300px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto; }
+.fabSpeedDialdemoMoreOptions .md-fab.demo-fab.trigger-fab:hover, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.trigger-fab.md-focused, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab:hover, .fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab.md-focused {
+  background-color: #333; }
+.fabSpeedDialdemoMoreOptions .md-fab.demo-fab.action-fab {
+  background-color: #aaa; }
+.fabSpeedDialdemoMoreOptions md-content div[flex="50"] {
+  padding: 15px; }
+  

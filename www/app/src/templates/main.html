@@ -1,0 +1,56 @@
+<div id="main-view-div" class="index-view" ng-controller="MainViewController as mainCtrl" layout="column" layout-fill>
+
+    <!-- <i style="font-size:3em; font-style: normal; font-weight: bold;" class="blue-text">SpotJams</i> -->
+
+    <div flex layout="row" layout-fill layout-margin>
+        <div flex class="linkless md-whiteframe-z1 blue-bg" ui-sref="find">
+            <h3>Find</h3>
+        </div>
+        <div flex class="linkless md-whiteframe-z1 red-bg" ui-sref="vjams">
+            <h3>vJams</h3>
+        </div>
+    </div>
+
+    <div flex layout="row" layout-fill layout-margin>
+        <div flex class="linkless md-whiteframe-z1 blue-bg" ui-sref="community">
+            <h3>Community</h3>
+        </div>
+        <div flex class="linkless md-whiteframe-z1 blue-bg" ui-sref="profile_user">
+            <h3>Profile</h3>
+        </div>
+    </div>
+
+
+    <div class="lock-size" layout="row" layout-align="end center">
+        <md-fab-speed-dial ng-hide="mainCtrl.hidden" md-direction="left" class="md-fling">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab md-warn" ng-click="mainCtrl.toggleMenu()">
+                    <md-tooltip md-direction="top">Menu</md-tooltip>
+                    <md-icon md-svg-src="assets/svg/menu.svg"></md-icon>
+                </md-button>
+            </md-fab-trigger>
+            <md-fab-actions ng-show="mainCtrl.showMenu">
+                <div ng-repeat="item in mainCtrl.items">
+                    <md-button aria-label="{{item.name}}" class="md-fab md-raised md-mini" ng-click="mainCtrl.openDialog($event, item)">
+                        <md-tooltip md-direction="{{item.direction}}">{{item.name}}</md-tooltip>
+                        <md-icon md-svg-src="{{item.icon}}"></md-icon>
+                    </md-button>
+                </div>
+            </md-fab-actions>
+        </md-fab-speed-dial>
+    </div>
+
+    <script type="text/ng-template" id="dialog.html">
+        <md-dialog>
+            <md-dialog-content>Hello User! You clicked {{dialog.item.name}}.</md-dialog-content>
+            <div class="md-actions">
+                <md-button aria-label="Close dialog" ng-click="dialog.close()" class="md-primary">
+                    Close Greeting
+                </md-button>
+                <md-button aria-label="Submit dialog" ng-click="dialog.submit()" class="md-primary">
+                    Submit
+                </md-button>
+            </div>
+        </md-dialog>
+    </script>
+</div>

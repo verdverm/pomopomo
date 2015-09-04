@@ -1,0 +1,32 @@
+<div id="login-div" ng-controller="LoginController as loginCtrl" layout="column" layout-align="start center">
+    
+    <h1>Login</h1>
+    
+    <form ng-submit="loginCtrl.tryLogin($event)">
+
+        <div layout="row">
+            <md-input-container>
+                <label>Username</label>
+                <input id="login-username" ng-model="loginCtrl.creds.username" name="username" type="text" style="font-size: 1.2em;" />
+            </md-input-container>
+        </div>
+        <div layout="row">
+            <md-input-container>
+                <label>Password</label>
+                <input id="login-password" ng-model="loginCtrl.creds.password" name="password" type="password" style="font-size: 1.2em;" />
+            </md-input-container>
+        </div>
+
+        <div layout="row" layout-align="center center">
+            <md-button class="md-raised md-primary md-hue-2" ng-click="loginCtrl.tryLogin($event)">
+                Login
+            </md-button>
+            <md-button class="md-raised md-accent md-hue-3" ui-sref="register">
+                Register
+            </md-button>
+        </div>
+
+        <input type="submit" tabindex="-1" hide/>
+    </form>
+</div>
+<div style="height: 500px"></div>

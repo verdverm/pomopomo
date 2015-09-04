@@ -7,6 +7,7 @@ import (
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jinzhu/gorm"
 	_ "github.com/mattn/go-sqlite3"
+	"github.com/rs/cors"
 )
 
 const (
@@ -25,10 +26,41 @@ var (
 
 func init() {
 
+	static_cors_middleware := cors.New(cors.Options{
+		AllowedOrigins: []string{
+			"http://localhost:8080",
+			"http://localhost:8081",
+		},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{
+			"Accept", "Content-Type", "X-Custom-Header", "Origin"},
+		AllowCredentials: true,
+		MaxAge:           3600,
+		// Debug:            true,
+	})
+
+	http.Handle("/", static_cors_middleware.Handler(http.FileServer(http.Dir("www"))))
+
+	cors_middleware := rest.CorsMiddleware{
+		RejectNonCorsRequests: false,
+		AllowedMethods:        []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders: []string{
+			"Accept", "Content-Type", "X-Custom-Header", "Origin"},
+		AccessControlAllowCredentials: true,
+		AccessControlMaxAge:           3600,
+		OriginValidator: func(origin string, request *rest.Request) bool {
+			ok := origin == "http://localhost:8080" || origin == "http://localhost:8081"
+
+			// log.Println("ORIGIN: ", origin, "  ok: ", ok, request.Request)
+
+			return ok
+		},
+	}
+
 	// Login API router
 	login_api := rest.NewApi()
 	login_api.Use(rest.DefaultDevStack...)
-	// login_api.Use(&cors_middleware)
+	login_api.Use(&cors_middleware)
 
 	login_router, _ := rest.MakeRouter(
 		// &rest.Route{"GET", "/csrf", csrfHandler},
@@ -42,7 +74,7 @@ func init() {
 	// Main API router
 	main_api := rest.NewApi()
 	statusMw := &rest.StatusMiddleware{}
-	// main_api.Use(&cors_middleware)
+	main_api.Use(&cors_middleware)
 	main_api.Use(&jwt_middleware)
 	main_api.Use(statusMw)
 	main_api.Use(rest.DefaultDevStack...)
@@ -71,7 +103,6 @@ func init() {
 
 		&rest.Route{"POST", "/todo/:id/pomo_start", StartPomodoro},
 		&rest.Route{"PUT", "/todo/:id/pomo_stop", StopPomodoro},
-
 	)
 	main_api.SetApp(main_api_router)
 
