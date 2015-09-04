@@ -1,17 +1,27 @@
-<md-list-item ng-controller="TodoItemController" flex layout-fill layout="row" layout-align="center center">
+<md-list-item ng-controller="TodoItemController" hm-tap="todoClicked($event)" 
+	flex layout-fill layout="row" layout-align="center center">
 	
-	<div class="todo-item-type-icon">
-		<ng-md-icon icon="place"></ng-md-icon>
+	<div class="todo-item-category">
+		<!-- <md-menu md-offset="0 -7">
+          <md-button aria-label="Open demo menu" class="md-icon-button" ng-click="$mdOpenMenu($event)">
+            <md-icon md-menu-origin md-svg-icon="menu"></md-icon>
+          </md-button>
+          <md-menu-content width="2">
+            <md-menu-item ng-repeat="item in [1, 2, 3]">
+              <md-button ng-click="ctrl.announceClick($index)"> <span md-menu-align-target>Option</span> {{item}} </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu> -->
 	</div>
 	
-	<div class="todo-item-text">
-		<h3>{{todo.name}}</h3>
-		<p>{{todo.description}}</p>
+	<div flex class="todo-item-text">
+		<h3>{{todo.Name}}</h3>
+		<p>{{todo.Description}}</p>
 	</div>
 
-	<div class="todo-item-actions" layout="row">
-		<ng-md-icon icon="alarm_add"></ng-md-icon>
-		<ng-md-icon icon="highlight_remove"></ng-md-icon>
+	<div flex="25" class="todo-item-actions" layout="row" layout-align="space-around center">
+		<ng-md-icon icon="alarm_add"        size="40" hm-tap="createAlarm($event)"></ng-md-icon>
+		<ng-md-icon icon="highlight_remove" size="40" hm-tap="deleteTodo($event)"></ng-md-icon>
 	</div>
 
 </md-list-item>

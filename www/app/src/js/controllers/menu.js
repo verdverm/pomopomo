@@ -1,7 +1,7 @@
 angular.module("pomodoroTodoApp")
 
 .controller("MenuController", 
-    function($scope, $location, $mdSidenav, authService) {
+    function($scope, $location, $mdSidenav, authService, todoService) {
 
     	var self = this;
 
@@ -29,6 +29,13 @@ angular.module("pomodoroTodoApp")
 
         function newTodo() {
         	console.log("Creating new Todo");
+
+        	var todo = {
+        		"Name": "todo E",
+        		"Description": "todo E description"
+        	}
+
+        	todoService.saveNewTodo(todo);
         }
 
         function logout() {

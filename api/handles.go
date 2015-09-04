@@ -70,7 +70,7 @@ func CreateTables(w rest.ResponseWriter, req *rest.Request) {
 // This handle gets all of the todos for a user
 // no params are needed, as we can extract the uuid from the auth token
 func GetAllTodos(w rest.ResponseWriter, req *rest.Request) {
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	todos := []UserTodo{}
 	err := db.Where("uuid = ?", uuid).Find(&todos).Error
@@ -79,7 +79,7 @@ func GetAllTodos(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	w.WriteJson(&todos)	
+	w.WriteJson(&todos)
 }
 
 // This handle gets a todo for a user by todo id
@@ -91,7 +91,7 @@ func GetTodo(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
 		return
 	}
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	todo := UserTodo{}
 	err := db.Where("uuid = ?", uuid).First(&todo, id).Error
@@ -115,7 +115,7 @@ func GetTodo(w rest.ResponseWriter, req *rest.Request) {
 
 // This handle creates a todo for a user
 func CreateTodo(w rest.ResponseWriter, req *rest.Request) {
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	log.Println("Unpacking data")
 	todo := UserTodo{}
@@ -153,9 +153,8 @@ func CreateTodo(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	w.WriteJson(map[string]interface{}{"result": "success!", "tid": todo.ID})
+	w.WriteJson(map[string]interface{}{"result": "success!", "todo": todo})
 }
-
 
 func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
 	id_str := req.PathParam("id")
@@ -164,7 +163,7 @@ func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
 		return
 	}
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	// Check for existing TODO
 
@@ -208,7 +207,7 @@ func DeleteTodo(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
 		return
 	}
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	dtodo := UserTodo{}
 	err := db.Where("uuid = ?", uuid).First(&dtodo, id).Error
@@ -239,7 +238,7 @@ func StartPomodoro(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
 		return
 	}
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	// get / check existing todo
 	todo := UserTodo{}
@@ -289,7 +288,7 @@ func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, ierr.Error(), http.StatusInternalServerError)
 		return
 	}
-	uuid := getUuid(w,req);
+	uuid := getUuid(w, req)
 
 	// get / check existing todo
 	todo := UserTodo{}
@@ -316,10 +315,10 @@ func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
 	// Validate time is ~~ 25 minutes
 	now := time.Now()
 
-	// update the UserTodo / Pomodoro 
+	// update the UserTodo / Pomodoro
 	todo.PomodoroCount++
 	todo.PomodoroCompleted++
-	
+
 	pomo.EndedAt = now
 	pomo.Completed = true
 
@@ -339,12 +338,3 @@ func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
 
 	w.WriteJson(map[string]interface{}{"result": "pomo ended", "tid": todo.ID})
 }
-
-
-
-
-
-
-
-
-

@@ -10,10 +10,12 @@ angular.module("pomodoroTodoApp")
         self.tryLogin = tryLogin;
 
         // functions
-        function tryLogin(evt) {
+        function tryLogin(event) {
             // ngMaterial has issues with multiple click events being fired right now
-            // evt.preventDefault();
-            console.log("tryLogin - doing", evt)
+            var pass = clickbuster.onClick(event);
+            if (!pass) {
+                return;
+            }
 
             // client-side validation
             // ...?

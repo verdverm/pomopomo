@@ -6,13 +6,8 @@
     </div>
 
     <md-list layout="column" layout-align="start center" layout-fill>
+        <todo-item flex="75" layout-fill ng-repeat="item in listCtrl.todos" todo="item"></todo-item>
         
-
-
-        <todo-item flex="75" layout-fill todo="{'name':'todo 1', 'description':'desciption of todo 1'}"></todo-item>
-        <todo-item todo="{'name':'todo 2', 'description':'desciption of todo 2'}"></todo-item>
-        <todo-item todo="{'name':'todo 3', 'description':'desciption of todo 3'}"></todo-item>
-
     </md-list>
 
 </md-card>

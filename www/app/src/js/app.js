@@ -3,7 +3,7 @@ var HOMEBASE = "http://localhost:8080"
 
 
     angular
-        .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngTouch'])
+        .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngTouch', 'hmTouchEvents'])
         
 
         .config(function($mdThemingProvider, $mdIconProvider, $httpProvider) {

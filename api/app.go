@@ -29,7 +29,7 @@ func init() {
 	static_cors_middleware := cors.New(cors.Options{
 		AllowedOrigins: []string{
 			"http://localhost:8080",
-			"http://localhost:8081",
+			"http://192.168.1.8:8080",
 		},
 		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders: []string{
@@ -49,7 +49,9 @@ func init() {
 		AccessControlAllowCredentials: true,
 		AccessControlMaxAge:           3600,
 		OriginValidator: func(origin string, request *rest.Request) bool {
-			ok := origin == "http://localhost:8080" || origin == "http://localhost:8081"
+			ok :=
+				origin == "http://localhost:8080" ||
+					origin == "http://192.168.1.8:8080"
 
 			// log.Println("ORIGIN: ", origin, "  ok: ", ok, request.Request)
 

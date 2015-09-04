@@ -9,12 +9,10 @@ angular.module("pomodoroTodoApp")
 
         self.tryRegister = function(evt) {
             // ngMaterial has issues with multiple click events being fired right now
-            // if (!clickLock()) {
-            //     return;
-            // };
-            evt.preventDefault();
-            console.log("tryRegister - doing", evt)
-
+            var pass = clickbuster.onClick(event);
+            if (!pass) {
+                return;
+            }
 
             authService.register(self.creds,
                 function success(data) {

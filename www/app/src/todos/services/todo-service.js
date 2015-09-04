@@ -6,8 +6,14 @@ angular.module("pomodoroTodoApp")
 
     _instance.todos = [];
 
-    _instance.getAllTodos = function() {
-        console.log("loginCreds")
+    _instance.getAllTodos = getAllTodos;
+    _instance.saveNewTodo = saveNewTodo;
+    _instance.updateTodo = updateTodo;
+    _instance.deleteTodo = deleteTodo;
+
+
+    function getAllTodos() {
+        console.log("getting all todos")
         var defer = $q.defer();
 
         $http({
@@ -16,7 +22,7 @@ angular.module("pomodoroTodoApp")
 
             })
             .success(function(data, status, headers, config) {
-                console.log(data)
+                // console.log(data)
                 if (data === undefined || data.error !== undefined) {
 
                     defer.reject(data.error);
@@ -35,5 +41,106 @@ angular.module("pomodoroTodoApp")
         return defer.promise
 
     }
+
+    function saveNewTodo(todo) {
+        console.log("saving todo: ", todo);
+        var defer = $q.defer();
+
+        $http({
+                'method': "POST",
+                'url': HOMEBASE + "/api/todo",
+                'data': JSON.stringify(todo),
+            })
+            .success(function(data, status, headers, config) {
+                console.log(data)
+                if (data === undefined || data.error !== undefined) {
+
+                    defer.reject(data.error);
+                } else {
+                    
+                    _instance.todos.push(data.todo);
+
+
+                    defer.resolve(data);
+                }
+            })
+            .error(function(data, status, headers, config) {
+
+                console.log("getting todos error!!!")
+
+                defer.reject(data.error);
+            })
+
+        return defer.promise
+    }
+
+    function updateTodo(todo) {
+        console.log("saving todo: ", todo);
+        var defer = $q.defer();
+
+        $http({
+                'method': "PUT",
+                'url': HOMEBASE + "/api/todo",
+                'data': JSON.stringify(todo),
+            })
+            .success(function(data, status, headers, config) {
+                console.log(data)
+                if (data === undefined || data.error !== undefined) {
+
+                    defer.reject(data.error);
+                } else {
+                    
+                    _instance.todos.push(data.todo);
+
+
+                    defer.resolve(data);
+                }
+            })
+            .error(function(data, status, headers, config) {
+
+                console.log("getting todos error!!!")
+
+                defer.reject(data.error);
+            })
+
+        return defer.promise
+    }
+
+    function deleteTodo(todo) {
+        console.log("deleteing todo: ", todo);
+        // var defer = $q.defer();
+
+        $http({
+                'method': "DELETE",
+                'url': HOMEBASE + "/api/todo/" + todo.id,
+            })
+            .success(function(data, status, headers, config) {
+                console.log(data)
+                if (data === undefined || data.error !== undefined) {
+
+                    // defer.reject(data.error);
+                } else {
+                    
+                    var pos = _instance.todos.indexOf(todo);
+                    console.log("deleting at pos: ", pos);
+                    _instance.todos.splice(pos,1);
+
+
+                    // defer.resolve(data);
+                }
+            })
+            .error(function(data, status, headers, config) {
+
+                console.log("deleting todo error!!!")
+
+                // defer.reject(data.error);
+            })
+
+        // return defer.promise
+    }
+
+
+
+
     return _instance;
 });
