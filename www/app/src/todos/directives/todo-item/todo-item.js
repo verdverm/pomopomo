@@ -77,4 +77,31 @@ angular.module("pomodoroTodoApp")
 
     }
 
+    self.updateTodo = function(event) {
+        console.log("updateTodo: ", event);
+        var pass = clickbuster.onClick(event);
+        if (!pass) {
+            return;
+        }
+        
+        var yes = confirm("Are you sure you want to update this todo?");
+
+        if(yes === false) {
+            return;
+        }
+        console.log("updating...");
+
+        todoService.updateTodo(self.todo)
+            .then(
+                function success(data) {
+                    alert("todo updated :]")
+                    self.showEditable = false;
+                },
+                function(error) {
+                    alert("unable to update todo :[\nsee console for details")
+                    console.log(error)
+                });
+
+    }
+
 })

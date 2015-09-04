@@ -80,7 +80,7 @@ angular.module("pomodoroTodoApp")
 
         $http({
                 'method': "PUT",
-                'url': HOMEBASE + "/api/todo",
+                'url': HOMEBASE + "/api/todo/" + todo.id,
                 'data': JSON.stringify(todo),
             })
             .success(function(data, status, headers, config) {

@@ -32,7 +32,12 @@
 	<md-card class="item_details" flex layout="column" layout-padding ng-show="showDetails">
 		<p>Created At: {{todo.CreatedAt}}</p>
 	</md-card>
-	<md-card class="item_details" flex layout="column" layout-padding ng-show="showEditable">
+	<md-card class="item_details" layout="column" layout-padding ng-show="showEditable">
+	    <div layout="row">
+	    	<md-button class="md-raised md-primary" hm-tap="updateTodo($event)">
+	    		Update
+	    	</md-button>
+	    </div>
 		<md-input-container>
             <label>Todo Name</label>
             <input ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
