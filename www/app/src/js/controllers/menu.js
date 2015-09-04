@@ -1,7 +1,7 @@
 angular.module("pomodoroTodoApp")
 
 .controller("MenuController", 
-    function($scope, $location, $mdSidenav, authService, todoService) {
+    function($scope, $location, $state, $mdSidenav, authService, todoService) {
 
     	var self = this;
 
@@ -15,27 +15,24 @@ angular.module("pomodoroTodoApp")
 
 
 	    // Menu functions
-
     	self.toggleMenu = toggleMenu;
-    	self.newTodo = newTodo;
+        self.gotoHome = gotoHome;
+        self.gotoTodos = gotoTodos;
     	self.logout = logout;
-
-
 
 
     	function toggleMenu() {
         	$mdSidenav('left').toggle();
         }
 
-        function newTodo() {
-        	console.log("Creating new Todo");
+        function gotoHome() {
+            console.log("got here home")
+            $state.go("index")
+        }
 
-        	var todo = {
-        		"Name": "todo E",
-        		"Description": "todo E description"
-        	}
-
-        	todoService.saveNewTodo(todo);
+        function gotoTodos() {
+            console.log("got here todo")
+            $state.go("main")
         }
 
         function logout() {
@@ -44,4 +41,4 @@ angular.module("pomodoroTodoApp")
         }
 
 
-	})
+	});

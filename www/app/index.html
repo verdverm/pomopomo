@@ -15,7 +15,7 @@
 <body ng-app="pomodoroTodoApp" ng-controller="MenuController as menuCtrl" layout="column" layout-fill>
 
     <md-toolbar layout="row" class="md-whiteframe-z2 md-primary md-hue-2">
-        <md-button ng-show="menuCtrl.showLogout" class="menu" hide-gt-lg ng-click="menuCtrl.toggleMenu()" aria-label="Show User List">
+        <md-button ng-show="menuCtrl.showLogout" class="menu" hide-gt-lg hm-tap="menuCtrl.toggleMenu()" aria-label="Show User List">
             <md-icon md-svg-icon="menu"></md-icon>
         </md-button>
         <h1>Pomodoro Todo App</h1>
@@ -29,17 +29,22 @@
                 <h1>Menu</h1>
             </md-toolbar>
             <md-list>
-              <md-list-item ng-click="menuCtrl.newTodo();" layout="row" layout-align="start center">
-                <ng-md-icon icon="my_library_add" style="fill: green"></ng-md-icon>
-                      New Todo
-              </md-list-item>
+                <md-list-item ng-click="menuCtrl.gotoHome();" layout="row" layout-align="start center">
+                    <ng-md-icon icon="home"></ng-md-icon>
+                    Home
+                </md-list-item>
 
-              <md-divider></md-divider>
+                <md-list-item ng-click="menuCtrl.gotoTodos();" layout="row" layout-align="start center">
+                    <ng-md-icon icon="assignment"></ng-md-icon>
+                    Your Todos
+                </md-list-item>
 
-              <md-list-item ng-click="menuCtrl.logout();" layout="row" layout-align="start center">
-                <ng-md-icon icon="logout"></ng-md-icon>
-                      Logout
-              </md-list-item>
+                <md-divider></md-divider>
+
+                <md-list-item ng-click="menuCtrl.logout();" layout="row" layout-align="start center">
+                    <ng-md-icon icon="logout"></ng-md-icon>
+                    Logout
+                </md-list-item>
             </md-list>
         </md-sidenav>
 

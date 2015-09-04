@@ -1,0 +1,33 @@
+<md-dialog aria-label="New Todo">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>New Todo</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" hm-tap="cancel()">
+                    <ng-md-icon icon="clear" aria-label="Close dialog">
+                        </md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="max-width:800px;max-height:810px; ">
+            <div layout="column">
+                <md-input-container>
+                    <label>Todo Name</label>
+                    <input ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
+                </md-input-container>
+                <md-input-container>
+                    <label>Description</label>
+                    <textarea ng-model="todo.Description" type="text" style="font-size: 1.2em;"></textarea>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button class="md-raised" hm-tap="cancel()">
+                Cancel
+            </md-button>
+            <md-button class="md-primary md-raised" hm-tap="create()" style="margin-right:20px;">
+                Create
+            </md-button>
+        </div>
+</md-dialog>

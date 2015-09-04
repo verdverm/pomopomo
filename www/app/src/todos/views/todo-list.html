@@ -1,8 +1,10 @@
 
 <md-card ng-controller="TodoListController as listCtrl" layout-margin layout-fill>
 
-    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;">
-        <h1>Todo Items</h1>
+    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;" layout-padding>
+        <span class="md-title">Todo Items</span>
+        <span flex></span>
+        <ng-md-icon icon="add_circle_outline" size="32" style="fill: white;" hm-tap="listCtrl.newTodo($event)"></ng-md-icon>
     </div>
 
     <md-list layout="column" layout-align="start center" layout-fill>
