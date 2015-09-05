@@ -10,6 +10,8 @@ angular.module("pomodoroTodoApp")
     _instance.saveNewTodo = saveNewTodo;
     _instance.updateTodo = updateTodo;
     _instance.deleteTodo = deleteTodo;
+    _instance.startPomo = startPomo;
+    _instance.stopPomo = stopPomo;
 
 
     function getAllTodos() {
@@ -90,7 +92,7 @@ angular.module("pomodoroTodoApp")
                     defer.reject(data.error);
                 } else {
                     
-                    _instance.todos.push(data.todo);
+                    // _instance.todos.push(data.todo);
 
 
                     defer.resolve(data);
@@ -139,6 +141,58 @@ angular.module("pomodoroTodoApp")
         return defer.promise
     }
 
+
+    function startPomo(todo) {
+        console.log("starting pomodoros for todo: ", todo);
+        var defer = $q.defer();
+
+        $http({
+                'method': "POST",
+                'url': HOMEBASE + "/api/todo/" + todo.id + "/pomo_start",
+            })
+            .success(function(data, status, headers, config) {
+                console.log(data)
+                if (data === undefined || data.error !== undefined) {
+                    defer.reject(data.error);
+                } else {
+                    
+                    // _instance.todos.push(data.todo);
+                    defer.resolve(data);
+                }
+            })
+            .error(function(data, status, headers, config) {
+
+                console.log("starting pomos error!!!")
+
+                defer.reject(data.error);
+            })
+
+        return defer.promise
+    }
+
+   function stopPomo(todo) {
+        console.log("stopping pomodoros for todo: ", todo);
+        var defer = $q.defer();
+
+        $http({
+                'method': "PUT",
+                'url': HOMEBASE + "/api/todo/" + todo.id + "/pomo_stop",
+            })
+            .success(function(data, status, headers, config) {
+                console.log(data)
+                if (data === undefined || data.error !== undefined) {
+                    defer.reject(data.error);
+                } else {
+                    defer.resolve(data);
+                }
+            })
+            .error(function(data, status, headers, config) {
+                console.log("stopping pomos error!!!")
+                defer.reject(data.error);
+            })
+
+        return defer.promise
+    }
 
 
 

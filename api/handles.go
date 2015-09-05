@@ -312,15 +312,24 @@ func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	// Validate time is ~~ 25 minutes
 	now := time.Now()
-
-	// update the UserTodo / Pomodoro
-	todo.PomodoroCount++
-	todo.PomodoroCompleted++
-
 	pomo.EndedAt = now
-	pomo.Completed = true
+
+	// Validate time is ~~ 25 minutes
+	res := "early"
+	diff := now.Sub(pomo.StartedAt)
+	log.Println("pomo time: ", diff.Minutes())
+
+	min_diff := 0.9
+
+	if diff.Minutes() > min_diff {
+		// if diff > 24.5 {
+		// update the UserTodo / Pomodoro
+		todo.PomodoroCount++
+		todo.PomodoroCompleted++
+		pomo.Completed = true
+		res = "ended"
+	}
 
 	// save stuff to DB
 	// wrap in TXN in prod
@@ -336,5 +345,5 @@ func StopPomodoro(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	w.WriteJson(map[string]interface{}{"result": "pomo ended", "tid": todo.ID})
+	w.WriteJson(map[string]interface{}{"result": res, "tid": todo.ID})
 }

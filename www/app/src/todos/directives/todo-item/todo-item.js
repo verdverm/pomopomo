@@ -138,34 +138,10 @@ angular.module("pomodoroTodoApp")
 
                 if (result === "done") {
 
-                    self.todo.PomodoroCompleted++;
-
-                    // todoService.pomoComplete(todo)
-                    //   .then(
-                    //   function success(data) {
-                    //       $mdToast.show($mdToast.simple().content('todo created :]'));
-                    //       self.showEditable = false;
-                    //   },
-                    //   function(error) {
-                    //       $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
-                    //       console.log(error)
-                    //   });
-
                 }
 
             }, function(result) {
                 console.log("dialog closed... early??? ", result)
-
-                // todoService.pomoEndedEarly(todo)
-                //   .then(
-                //   function success(data) {
-                //       $mdToast.show($mdToast.simple().content('todo created :]'));
-                //       self.showEditable = false;
-                //   },
-                //   function(error) {
-                //       $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
-                //       console.log(error)
-                //   });
 
             });
 
@@ -176,17 +152,17 @@ angular.module("pomodoroTodoApp")
             $scope.complete = false;
             $scope.clock = "25:00";
             $scope.sound = new Howl({
-                  src: [
+                src: [
                     '/assets/audio/gong.ogg',
-                    '/assets/audio/gong.mp3', 
-                  ],
-                  autoplay: false,
-                  loop: true,
-                  // volume: 0.5,
-                  // onend: function() {
-                  //   console.log('Finished!');
-                  // }
-                });
+                    '/assets/audio/gong.mp3',
+                ],
+                autoplay: false,
+                loop: true,
+                // volume: 0.5,
+                // onend: function() {
+                //   console.log('Finished!');
+                // }
+            });
             $scope.$on("$destroy", function() {
                 $scope.sound.unload();
             });
@@ -195,14 +171,23 @@ angular.module("pomodoroTodoApp")
                 console.log("start POMO")
 
                 // signal server starting
-                self.todo.PomodoroStarted++
+                todoService.startPomo(self.todo)
+                    .then(
+                        function success(data) {
+                            // start timer 
+                            console.log("started: ", data);
+                            var twentyFiveMinutes = 60;
+                            startTimer(twentyFiveMinutes);
+                            $scope.started = true;
+                            $scope.running = true;
+                            self.todo.PomodoroStarted++;
+                        },
+                        function(error) {
+                            $mdToast.show($mdToast.simple().content("error starting pomos :[\nsee console for details"));
+                            console.log(error)
+                        });
 
-                // start timer 
 
-                var twentyFiveMinutes = 6;
-                startTimer(twentyFiveMinutes);
-                $scope.started = true;
-                $scope.running = true;
             }
 
             $scope.done = function() {
@@ -213,7 +198,7 @@ angular.module("pomodoroTodoApp")
                 $scope.sound.play();
 
                 // send info to server
-                
+                sendPomoStop();
 
                 $scope.running = false;
                 $scope.complete = true;
@@ -227,9 +212,8 @@ angular.module("pomodoroTodoApp")
                 if (doStop) {
                     $interval.cancel($scope.timer);
                     $scope.running = false;
+                    sendPomoStop();
                 }
-
-
             }
 
             $scope.cancel = function() {
@@ -241,17 +225,36 @@ angular.module("pomodoroTodoApp")
                     $mdDialog.hide('ok');
                 }
 
-                if ($scope.started && $scope.running) {
+                if ($scope.started && !$scope.complete) {
                     var doStop = confirm("Are you sure? Stopping early is recorded too!")
                     if (doStop) {
                         $interval.cancel($scope.timer);
                         $scope.running = false;
                         $mdDialog.cancel('early');
+                        sendPomoStop();
                     }
                 }
-            };
+            }
 
+            function sendPomoStop() {
+                todoService.stopPomo(self.todo)
+                    .then(
+                        function success(data) {
+                            // check that things match
+                            console.log("completed: ", data);
+                            if (data.result === "early") {
+                                $mdToast.show($mdToast.simple().content('pomo ended early :['));
+                            } else if (data.result === "ended") {
+                                $mdToast.show($mdToast.simple().content('pomo completed :]'));
+                                self.todo.PomodoroCompleted++;
+                            }
+                        },
+                        function(error) {
+                            $mdToast.show($mdToast.simple().content("error completing pomos :[\nsee console for details"));
+                            console.log(error)
+                        });
 
+            }
 
             function startTimer(duration) {
                 var start = Date.now(),

@@ -1,30 +1,29 @@
 <md-dialog aria-label="New Pomodoro">
-        <md-toolbar>
-            <div class="md-toolbar-tools" style="background: #62B1F6">
-                <h2>New Pomodoro</h2>
-                <span flex></span>
-                <md-button class="md-icon-button" hm-tap="cancel()">
-                    <ng-md-icon icon="clear" aria-label="Close dialog" style="fill: #DEEBF8;">
-                        </md-icon>
-                </md-button>
-            </div>
-        </md-toolbar>
-        <md-dialog-content style="max-width:800px;max-height:810px;"  ng-style="complete === true && {'background-color':'yellow'}">
-            <div layout="column" layout-align="start center">
-                <img src="/assets/img/tomato-icon.png" style="width: auto; max-height: 120px;">
-                <span class="md-display-1">{{clock}}</span>
-            </div>
-        </md-dialog-content>
-        <div class="md-actions" layout="row"  ng-style="complete === true && {'background-color':'yellow'}">
+    <md-toolbar>
+        <div class="md-toolbar-tools" style="background: #62B1F6">
+            <h2>New Pomodoro</h2>
             <span flex></span>
-            <md-button class="md-raised md-primary" hm-tap="start()" ng-show="!started">
-                Start
-            </md-button>
-            <md-button class="md-raised md-warn" hm-tap="stop()" ng-show="running">
-                Stop
-            </md-button>
-            <md-button class="md-raised" hm-tap="cancel()">
-                Close
+            <md-button class="md-icon-button" hm-tap="cancel()">
+                <ng-md-icon icon="clear" aria-label="Close dialog" style="fill: white;"></ng-md-icon>
             </md-button>
         </div>
+    </md-toolbar>
+    <md-dialog-content style="max-width:800px;max-height:810px;"  ng-style="complete === true && {'background-color':'yellow'}">
+        <div layout="column" layout-align="start center">
+            <img src="/assets/img/tomato-icon.png" style="width: auto; max-height: 120px;">
+            <span class="md-display-1">{{clock}}</span>
+        </div>
+    </md-dialog-content>
+    <div class="md-actions" layout="row"  ng-style="complete === true && {'background-color':'yellow'}">
+        <span flex></span>
+        <md-button class="md-raised md-primary" hm-tap="start()" ng-show="!started">
+            Start
+        </md-button>
+        <md-button class="md-raised md-warn" hm-tap="stop()" ng-show="running">
+            Stop
+        </md-button>
+        <md-button class="md-raised" hm-tap="cancel()">
+            Close
+        </md-button>
+    </div>
 </md-dialog>
