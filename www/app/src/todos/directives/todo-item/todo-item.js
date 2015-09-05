@@ -209,9 +209,10 @@ angular.module("pomodoroTodoApp")
                 console.log("done POMO")
                 $interval.cancel($scope.timer);
 
-                // send info to server
                 // make it go booooooooooooong
                 $scope.sound.play();
+                
+                // send info to server
 
                 $scope.running = false;
                 $scope.complete = true;

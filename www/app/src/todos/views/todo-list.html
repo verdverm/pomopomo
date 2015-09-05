@@ -1,17 +1,18 @@
+<div layout-padding>
+	<md-card ng-controller="TodoListController as listCtrl" layout-padding layout-margin>
 
-<md-card ng-controller="TodoListController as listCtrl" layout-margin layout-fill>
-
-    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;" layout-padding>
-        <span class="md-title">Todo Items</span>
-        <span flex></span>
-        <ng-md-icon icon="add_circle_outline" size="32" style="fill: white;" hm-tap="listCtrl.newTodo($event)"></ng-md-icon>
-    </div>
-
-    <md-list layout="column" layout-align="start center" layout-fill>
-	    <div flex="75" layout-fill ng-repeat="item in listCtrl.todos">
-	        <todo-item flex layout-fill todo="item"></todo-item>
-	    	<md-divider flex ng-if="!$last"></md-divider>
+	    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;" layout-padding>
+	        <span class="md-title">Todo Items</span>
+	        <span flex></span>
+	        <ng-md-icon icon="add_circle_outline" size="32" style="fill: white;" hm-tap="listCtrl.newTodo($event)"></ng-md-icon>
 	    </div>
-    </md-list>
 
-</md-card>
+	    <md-list layout="column" layout-align="start center" layout-fill>
+		    <div flex="75" layout-fill ng-repeat="item in listCtrl.todos">
+		        <todo-item flex layout-fill todo="item"></todo-item>
+		    	<md-divider flex ng-if="!$last"></md-divider>
+		    </div>
+	    </md-list>
+
+	</md-card>
+</div>
