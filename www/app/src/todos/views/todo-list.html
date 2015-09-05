@@ -8,8 +8,10 @@
     </div>
 
     <md-list layout="column" layout-align="start center" layout-fill>
-        <todo-item flex="75" layout-fill ng-repeat="item in listCtrl.todos" todo="item"></todo-item>
-        
+	    <div flex="75" layout-fill ng-repeat="item in listCtrl.todos">
+	        <todo-item flex layout-fill todo="item"></todo-item>
+	    	<md-divider flex ng-if="!$last"></md-divider>
+	    </div>
     </md-list>
 
 </md-card>

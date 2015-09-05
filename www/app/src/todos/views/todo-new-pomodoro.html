@@ -1,0 +1,30 @@
+<md-dialog aria-label="New Pomodoro">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>New Pomodoro</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" hm-tap="cancel()">
+                    <ng-md-icon icon="clear" aria-label="Close dialog">
+                        </md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content style="max-width:800px;max-height:810px; ">
+            <div layout="column" layout-align="start center">
+                <img src="/assets/img/tomato-xxl.png" style="width: auto; max-height: 120px;">
+                <span class="md-display-1">{{clock}}</span>
+            </div>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+            <span flex></span>
+            <md-button class="md-raised md-primary" hm-tap="start()" ng-show="!started">
+                Start
+            </md-button>
+            <md-button class="md-raised md-warn" hm-tap="stop()" ng-show="running">
+                Stop
+            </md-button>
+            <md-button class="md-raised" hm-tap="cancel()">
+                Close
+            </md-button>
+        </div>
+</md-dialog>

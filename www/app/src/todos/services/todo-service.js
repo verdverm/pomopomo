@@ -108,7 +108,7 @@ angular.module("pomodoroTodoApp")
 
     function deleteTodo(todo) {
         console.log("deleteing todo: ", todo);
-        // var defer = $q.defer();
+        var defer = $q.defer();
 
         $http({
                 'method': "DELETE",
@@ -118,7 +118,7 @@ angular.module("pomodoroTodoApp")
                 console.log(data)
                 if (data === undefined || data.error !== undefined) {
 
-                    // defer.reject(data.error);
+                    defer.reject(data.error);
                 } else {
                     
                     var pos = _instance.todos.indexOf(todo);
@@ -126,17 +126,17 @@ angular.module("pomodoroTodoApp")
                     _instance.todos.splice(pos,1);
 
 
-                    // defer.resolve(data);
+                    defer.resolve(data);
                 }
             })
             .error(function(data, status, headers, config) {
 
                 console.log("deleting todo error!!!")
 
-                // defer.reject(data.error);
+                defer.reject(data.error);
             })
 
-        // return defer.promise
+        return defer.promise
     }
 
 

@@ -26,17 +26,19 @@ angular.module("pomodoroTodoApp")
         }
 
         function gotoHome() {
-            console.log("got here home")
+            $mdSidenav('left').close();
             $state.go("index")
         }
 
         function gotoTodos() {
-            console.log("got here todo")
+            $mdSidenav('left').close();
             $state.go("main")
         }
 
         function logout() {
+            $mdSidenav('left').close();
         	authService.logout();
+
         	$location.path("/");
         }
 

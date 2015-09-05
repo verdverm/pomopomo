@@ -15,7 +15,7 @@ angular.module("pomodoroTodoApp")
     }
 })
 
-.controller("TodoItemController", function($rootScope, $scope, $location, todoService) {
+.controller("TodoItemController", function($rootScope, $scope, $location, $interval, $mdDialog, $mdToast, todoService) {
     var self = $scope;
 
     self.showDetails = false;
@@ -39,24 +39,37 @@ angular.module("pomodoroTodoApp")
         if (!pass) {
             return;
         }
-        // not sure why, but this is the only icon handler clicking through
-        // and triggering the details as well...
 
+        // not sure why, but the icon handlers are clicking through
+        // and triggering the details as well...
         self.showDetails = !self.showDetails;
+
         self.showEditable = !self.showEditable;
 
         console.log("show editing ? ", self.showEditable)
 
     }
 
-    self.createAlarm = function(event) {
-        console.log("createAlarm: ", event);
+
+
+    self.updateTodo = function(event) {
+        console.log("updateTodo: ", event);
         var pass = clickbuster.onClick(event);
         if (!pass) {
             return;
         }
-        
-        alert("BLUE TOMATOES!!!")
+
+        todoService.updateTodo(self.todo)
+            .then(
+                function success(data) {
+                    $mdToast.show($mdToast.simple().content('todo updated :]'));
+                    self.showEditable = false;
+                },
+                function(error) {
+                    $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
+                    console.log(error)
+                });
+
     }
 
     self.deleteTodo = function(event) {
@@ -65,43 +78,203 @@ angular.module("pomodoroTodoApp")
         if (!pass) {
             return;
         }
-        
-        var yes = confirm("Are you sure you want to delete this todo?");
 
-        if(yes === false) {
-            return;
-        }
-        console.log("deleting...");
+        // not sure why, but the icon handlers are clicking through
+        // and triggering the details as well...
+        self.showDetails = !self.showDetails;
 
-        todoService.deleteTodo(self.todo)
+
+        var confirm = $mdDialog.confirm()
+            .title('Would you like to delete your todo?')
+            .content('You will not be able to undo this action.')
+            .ariaLabel('Lucky day')
+            .ok('Please do it!')
+            .cancel('Cancel')
+            .targetEvent(event);
+        $mdDialog.show(confirm).then(function() {
+
+            todoService.deleteTodo(self.todo)
+                .then(
+                    function success(data) {
+                        $mdToast.show($mdToast.simple().content('todo deleted :]'));
+                        self.showEditable = false;
+                    },
+                    function(error) {
+                        $mdToast.show($mdToast.simple().content("unable to delete todo :[\nsee console for details"));
+                        console.log(error)
+                    });
+
+        }, function() {
+            console.log("user cancelled the delete")
+        });
 
     }
 
-    self.updateTodo = function(event) {
-        console.log("updateTodo: ", event);
+    self.createAlarm = function(event) {
         var pass = clickbuster.onClick(event);
         if (!pass) {
             return;
         }
-        
-        var yes = confirm("Are you sure you want to update this todo?");
+        console.log("createAlarm: ", event);
 
-        if(yes === false) {
-            return;
-        }
-        console.log("updating...");
+        // not sure why, but the icon handlers are clicking through
+        // and triggering the details as well...
+        self.showDetails = !self.showDetails;
 
-        todoService.updateTodo(self.todo)
-            .then(
-                function success(data) {
-                    alert("todo updated :]")
-                    self.showEditable = false;
+
+        self.timerDialog = $mdDialog
+        self.timerDialog.show({
+                templateUrl: '/src/todos/views/todo-new-pomodoro.html',
+                parent: angular.element(document.body),
+                targetEvent: event,
+                clickOutsideToClose: false,
+                locals: {
+                    parent: self
                 },
-                function(error) {
-                    alert("unable to update todo :[\nsee console for details")
-                    console.log(error)
-                });
+                controller: ['$scope', '$interval', '$mdDialog', '$mdToast', 'parent', DialogController],
+            })
+            .then(function(result) {
+                console.log("pomo complete: ", result)
+
+                if (result === "done") {
+
+                    self.todo.PomodoroComplete++;
+
+                    // todoService.pomoComplete(todo)
+                    //   .then(
+                    //   function success(data) {
+                    //       $mdToast.show($mdToast.simple().content('todo created :]'));
+                    //       self.showEditable = false;
+                    //   },
+                    //   function(error) {
+                    //       $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
+                    //       console.log(error)
+                    //   });
+
+                }
+
+            }, function(result) {
+                console.log("dialog closed... early??? ", result)
+
+                // todoService.pomoEndedEarly(todo)
+                //   .then(
+                //   function success(data) {
+                //       $mdToast.show($mdToast.simple().content('todo created :]'));
+                //       self.showEditable = false;
+                //   },
+                //   function(error) {
+                //       $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
+                //       console.log(error)
+                //   });
+
+            });
+
+        function DialogController($scope, $interval, $mdDialog, $mdToast, parent) {
+
+            $scope.started = false;
+            $scope.running = false;
+            $scope.complete = false;
+            $scope.clock = "25:00"
+
+            $scope.start = function() {
+                console.log("start POMO")
+
+                // signal server starting
+                self.todo.PomodoroStarted++
+
+                // start timer 
+
+                var twentyFiveMinutes = 6;
+                startTimer(twentyFiveMinutes);
+                $scope.started = true;
+                $scope.running = true;
+            }
+
+            $scope.done = function() {
+                console.log("done POMO")
+                $interval.cancel($scope.timer);
+
+                // send info to server
+                // make it go beep and shit
+
+                $scope.running = false;
+                $scope.complete = true;
+
+            };
+
+            $scope.stop = function() {
+                console.log("stop POMO")
+
+                var doStop = confirm("Are you sure? Stopping early is recorded too!")
+                if (doStop) {
+                    $interval.cancel($scope.timer);
+                    $scope.running = false;
+                }
+
+
+            }
+
+            $scope.cancel = function() {
+                console.log("cancel")
+                if ($scope.complete) {
+                    $mdDialog.hide('done');
+                }
+                if (!$scope.started) {
+                    $mdDialog.hide('ok');
+                }
+
+                if ($scope.started && $scope.running) {
+                    var doStop = confirm("Are you sure? Stopping early is recorded too!")
+                    if (doStop) {
+                        $interval.cancel($scope.timer);
+                        $scope.running = false;
+                        $mdDialog.cancel('early');
+                    }
+                }
+            };
+
+
+
+            function startTimer(duration) {
+                var start = Date.now(),
+                    diff,
+                    minutes,
+                    seconds;
+                var millis = duration * 1000;
+
+                function timer() {
+                    // get the number of seconds that have elapsed since 
+                    // startTimer() was called
+                    diff = duration - (((Date.now() - start) / 1000) | 0);
+
+                    // does the same job as parseInt truncates the float
+                    minutes = (diff / 60) | 0;
+                    seconds = (diff % 60) | 0;
+
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    $scope.clock = minutes + ":" + seconds;
+                    console.log($scope.clock);
+                    if (diff == 0) {
+                        console.log("LESS THAN ZERO!!")
+                        $scope.done();
+                    }
+
+                    if (diff <= 0) {
+                        // add one second so that the count down starts at the full duration
+                        start = Date.now() + 1000;
+                    }
+                };
+                // we don't want to wait a full second before the timer starts
+                timer();
+                $scope.timer = $interval(timer, 1000, duration);
+            }
+
+        }
 
     }
+
+
 
 })
