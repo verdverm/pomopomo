@@ -174,7 +174,22 @@ angular.module("pomodoroTodoApp")
             $scope.started = false;
             $scope.running = false;
             $scope.complete = false;
-            $scope.clock = "25:00"
+            $scope.clock = "25:00";
+            $scope.sound = new Howl({
+                  src: [
+                    '/assets/audio/gong.ogg',
+                    '/assets/audio/gong.mp3', 
+                  ],
+                  autoplay: false,
+                  loop: true,
+                  // volume: 0.5,
+                  // onend: function() {
+                  //   console.log('Finished!');
+                  // }
+                });
+            $scope.$on("$destroy", function() {
+                $scope.sound.unload();
+            });
 
             $scope.start = function() {
                 console.log("start POMO")
@@ -195,7 +210,8 @@ angular.module("pomodoroTodoApp")
                 $interval.cancel($scope.timer);
 
                 // send info to server
-                // make it go beep and shit
+                // make it go booooooooooooong
+                $scope.sound.play();
 
                 $scope.running = false;
                 $scope.complete = true;
