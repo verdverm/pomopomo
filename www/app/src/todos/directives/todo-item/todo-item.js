@@ -138,7 +138,7 @@ angular.module("pomodoroTodoApp")
 
                 if (result === "done") {
 
-                    self.todo.PomodoroComplete++;
+                    self.todo.PomodoroCompleted++;
 
                     // todoService.pomoComplete(todo)
                     //   .then(
@@ -211,8 +211,9 @@ angular.module("pomodoroTodoApp")
 
                 // make it go booooooooooooong
                 $scope.sound.play();
-                
+
                 // send info to server
+                
 
                 $scope.running = false;
                 $scope.complete = true;
