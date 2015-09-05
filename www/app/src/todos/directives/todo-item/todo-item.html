@@ -19,7 +19,8 @@
 	</md-list-item>
 
 	<md-card class="item_details" flex layout="column" layout-padding ng-show="showDetails">
-		<p>Created At: {{todo.CreatedAt}}</p>
+		<p>Created On: {{todo.CreatedAt | date }}</p>
+		<p>Pomodoro Ratio: {{todo.PomodoroCompleted}} / {{todo.PomodoroStarted}}</p>
 	</md-card>
 	<md-card class="item_details" layout="column" layout-padding ng-show="showEditable">
 	    <div layout="row">

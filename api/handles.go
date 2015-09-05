@@ -128,6 +128,11 @@ func CreateTodo(w rest.ResponseWriter, req *rest.Request) {
 
 	log.Println("incoming todo: %+v", todo)
 
+	if todo.Name == "" {
+		rest.Error(w, "name empty", http.StatusBadRequest)
+		return
+	}
+
 	// Is this a new todo (by name) ?
 	unique := false
 	utodo := UserTodo{}
@@ -139,7 +144,7 @@ func CreateTodo(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 	if !unique {
-		w.WriteJson(&PomoError{Error: "name taken"})
+		rest.Error(w, "name taken", http.StatusBadRequest)
 		return
 	}
 
@@ -188,8 +193,22 @@ func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
 	log.Println("merged todo: %+v", todo)
+
+	// Is this a new todo (by name) ?
+	unique := false
+	utodo := UserTodo{}
+	err = db.Where("uuid = ?", uuid).Where("name = ?", todo.Name).First(&utodo).Error
+	if err == gorm.RecordNotFound {
+		unique = true
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !unique {
+		rest.Error(w, "name taken", http.StatusBadRequest)
+		return
+	}
 
 	err = db.Save(todo).Error
 	if err != nil {

@@ -66,7 +66,7 @@ angular.module("pomodoroTodoApp")
                     self.showEditable = false;
                 },
                 function(error) {
-                    $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
+                    $mdToast.show($mdToast.simple().content("unable to update todo :[\n" + error.Error));
                     console.log(error)
                 });
 
@@ -100,7 +100,7 @@ angular.module("pomodoroTodoApp")
                         self.showEditable = false;
                     },
                     function(error) {
-                        $mdToast.show($mdToast.simple().content("unable to delete todo :[\nsee console for details"));
+                        $mdToast.show($mdToast.simple().content("unable to delete todo :[\n" + error.Error));
                         console.log(error)
                     });
 
@@ -183,7 +183,7 @@ angular.module("pomodoroTodoApp")
                             self.todo.PomodoroStarted++;
                         },
                         function(error) {
-                            $mdToast.show($mdToast.simple().content("error starting pomos :[\nsee console for details"));
+                            $mdToast.show($mdToast.simple().content("error starting pomos :[\n" + error.Error));
                             console.log(error)
                         });
 
@@ -250,7 +250,7 @@ angular.module("pomodoroTodoApp")
                             }
                         },
                         function(error) {
-                            $mdToast.show($mdToast.simple().content("error completing pomos :[\nsee console for details"));
+                            $mdToast.show($mdToast.simple().content("error completing pomos :[\n" + error.Error));
                             console.log(error)
                         });
 

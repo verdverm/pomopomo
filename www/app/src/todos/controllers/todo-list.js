@@ -32,6 +32,11 @@ angular.module("pomodoroTodoApp")
 		    .then(function(todo) {
 		      console.log("new todo: ", todo)
 		      
+		      if ( todo.Name === "" ) {
+                $mdToast.show($mdToast.simple().content("unable to create todo :[\n" + "empty name"));
+		      	return;
+		      }
+
 		      todoService.saveNewTodo(todo)
 		      	.then(
                 function success(data) {
@@ -39,7 +44,7 @@ angular.module("pomodoroTodoApp")
                     self.showEditable = false;
                 },
                 function(error) {
-                    $mdToast.show($mdToast.simple().content("unable to update todo :[\nsee console for details"));
+                    $mdToast.show($mdToast.simple().content("unable to create todo :[\n" + error.Error));
                     console.log(error)
                 });
 

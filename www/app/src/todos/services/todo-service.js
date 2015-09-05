@@ -56,7 +56,7 @@ angular.module("pomodoroTodoApp")
             .success(function(data, status, headers, config) {
                 console.log(data)
                 if (data === undefined || data.error !== undefined) {
-
+                    // hmmm
                     defer.reject(data.error);
                 } else {
                     
@@ -68,9 +68,9 @@ angular.module("pomodoroTodoApp")
             })
             .error(function(data, status, headers, config) {
 
-                console.log("getting todos error!!!")
+                console.log("saving todo error!!!")
 
-                defer.reject(data.error);
+                defer.reject(data);
             })
 
         return defer.promise
@@ -102,7 +102,7 @@ angular.module("pomodoroTodoApp")
 
                 console.log("getting todos error!!!")
 
-                defer.reject(data.error);
+                defer.reject(data);
             })
 
         return defer.promise
@@ -135,7 +135,7 @@ angular.module("pomodoroTodoApp")
 
                 console.log("deleting todo error!!!")
 
-                defer.reject(data.error);
+                defer.reject(data);
             })
 
         return defer.promise
@@ -164,7 +164,7 @@ angular.module("pomodoroTodoApp")
 
                 console.log("starting pomos error!!!")
 
-                defer.reject(data.error);
+                defer.reject(data);
             })
 
         return defer.promise
@@ -188,7 +188,7 @@ angular.module("pomodoroTodoApp")
             })
             .error(function(data, status, headers, config) {
                 console.log("stopping pomos error!!!")
-                defer.reject(data.error);
+                defer.reject(data);
             })
 
         return defer.promise
