@@ -1,11 +1,11 @@
 var frisby = require('frisby');
+var auth = require("./auth_data");
 
 var URL = 'http://localhost:8080/api/';
-var UUID = 'c46157d-fb83-40d0-9b45-f4c33efd919'
 
 frisby.globalSetup({ // globalSetup is for ALL requests
   request: {
-    headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NDM4MTcwOTQsImlkIjoiYzQ2MTU3ZC1mYjgzLTQwZDAtOWI0NS1mNGMzM2VmZDkxOSJ9.tsN_4QZyTmGX0ILiMgihLfbpgJawnkPyAU_GO6fjyY8' }
+    headers: { 'Authorization': 'Bearer ' + auth.TOKEN }
   }
 });
 
@@ -18,28 +18,28 @@ frisby.create('POST new todo')
   .expectStatus(200)
   .expectJSONTypes({
     result: String,
-    tid: Number
+    todo: Object
   })
   .expectJSON({
     result: "success!"  
   })
-  .afterJSON(function(result){
-    // console.log(result);
+  .afterJSON(function(ret){
+    // console.log(ret);
 
-    var tid = result.tid;
+    var tid = ret.todo.id;
 
     frisby.create('GET existing todo')
-      .get(URL + 'todo/' + result.tid)
+      .get(URL + 'todo/' + tid)
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: UUID,
+        Uuid: auth.UUID,
         Name: 'test pomos todo'
       })
     .toss();
 
     frisby.create('GET pomo start')
-      .post(URL + 'todo/' + result.tid + "/pomo_start")
+      .post(URL + 'todo/' + tid + "/pomo_start")
       .expectStatus(200)
       .expectJSON({
         result: 'pomo started',
@@ -48,42 +48,40 @@ frisby.create('POST new todo')
     .toss();
 
     frisby.create('GET existing todo')
-      .get(URL + 'todo/' + result.tid)
+      .get(URL + 'todo/' + tid)
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: UUID,
+        Uuid: auth.UUID,
         PomodoroStarted: 1
       })
     .toss();
 
     frisby.create('GET pomo stop')
-      .put(URL + 'todo/' + result.tid + "/pomo_stop")
+      .put(URL + 'todo/' + tid + "/pomo_stop")
       .expectStatus(200)
       .expectJSON({
-        result: 'pomo ended',
+        result: 'early',
         tid: tid
       })
     .toss();
 
     frisby.create('GET existing todo')
-      .get(URL + 'todo/' + result.tid)
+      .get(URL + 'todo/' + tid)
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: UUID,
+        Uuid: auth.UUID,
         PomodoroStarted: 1,
-        PomodoroCompleted: 1,
-        PomodoroCount: 1
+        PomodoroCompleted: 0,
+        PomodoroCount: 0
       })
     .toss();
 
     frisby.create('Delete todo')
-      .delete(URL + 'todo/' + result.tid)
+      .delete(URL + 'todo/' + tid)
       .expectStatus(200)
     .toss();
-
-
 
   })
 .toss();

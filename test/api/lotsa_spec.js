@@ -1,11 +1,11 @@
 var frisby = require('frisby');
+var auth = require("./auth_data");
 
 var URL = 'http://localhost:8080/api/';
-var UUID = 'c46157d-fb83-40d0-9b45-f4c33efd919'
 
 frisby.globalSetup({ // globalSetup is for ALL requests
   request: {
-    headers: { 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE0NDM4MTcwOTQsImlkIjoiYzQ2MTU3ZC1mYjgzLTQwZDAtOWI0NS1mNGMzM2VmZDkxOSJ9.tsN_4QZyTmGX0ILiMgihLfbpgJawnkPyAU_GO6fjyY8' }
+    headers: { 'Authorization': 'Bearer ' + auth.TOKEN }
   }
 });
 
@@ -26,7 +26,7 @@ for (var i = 0; i < NUM_TODOS; i++) {
 	  .expectStatus(200)
 	  .expectJSONTypes({
 	    result: String,
-	    tid: Number
+	    todo: Object,
 	  })
 	  .expectJSON({
 	    result: "success!"  

@@ -83,6 +83,7 @@ func init() {
 		&rest.Route{"GET", "/refresh_token", jwt_middleware.RefreshHandler},
 		&rest.Route{"GET", "/auth_test",
 			func(w rest.ResponseWriter, r *rest.Request) {
+				// check in redis or memcached, preferrably with device info
 				w.WriteJson(map[string]string{"authed": r.Env["REMOTE_USER"].(string)})
 			},
 		},

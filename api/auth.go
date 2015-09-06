@@ -44,23 +44,18 @@ func LoginHandler(w rest.ResponseWriter, req *rest.Request) {
 	}
 
 	// TODO case insensitive comparison of
-	//
 	// Username and Email
 
-	log.Println("Checking username!!!")
 	// CHECK username
 	auth := UserAuth{}
 	err = db.Where("Username = ?", login.Username).Or("email = ?", login.Username).First(&auth).Error
 	if err == gorm.RecordNotFound {
-		log.Println("Username NOT FOUND!!!")
-		rest.Error(w, "unknown username", http.StatusBadRequest)
+		rest.Error(w, "login failure", http.StatusBadRequest)
 		return
 	} else if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	log.Println("Username OK!!!")
-	log.Println("Checking password!!!")
 
 	// check password
 	err = bcrypt.CompareHashAndPassword(auth.HashedPassword, []byte(login.Password))
@@ -69,8 +64,7 @@ func LoginHandler(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	// login to jwt and return token
-	// jwt_middleware.LoginHandler(w, req)
+	// generate the JWT token
 	token := JWT.New(JWT.GetSigningMethod(jwt_middleware.SigningAlgorithm))
 	token.Claims["id"] = auth.Uuid
 	token.Claims["exp"] = time.Now().Add(jwt_middleware.Timeout).Unix()
@@ -100,60 +94,58 @@ func RegisterHandler(w rest.ResponseWriter, req *rest.Request) {
 		return
 	}
 
-	// check username DOESNT exist in datastore
-	auth := UserAuth{}
-	err = db.Where("username = ?", register.Username).First(&auth).Error
-	if err == gorm.RecordNotFound {
-		goto okusername
-	}
-	if err != nil {
-		rest.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.WriteJson(&PomoError{Error: "username taken"})
-	return
-
-okusername:
-	log.Println("Username OK!!!")
-
-	err = db.Where("email = ?", register.Email).First(&auth).Error
-	if err == gorm.RecordNotFound {
-		goto okemail
-	}
-	if err != nil {
-		rest.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	w.WriteJson(&PomoError{Error: "email taken"})
-	return
-
-okemail:
-	log.Println("Email OK!!!")
-
 	// do VALIDATION checks
 	// check email
 	if register.Email == "" {
-		w.WriteJson(&PomoError{Error: "Empty Email"})
+		rest.Error(w, "Empty Email", http.StatusBadRequest)
 		return
 	}
-
 	// check username
 	if register.Username == "" {
-		w.WriteJson(&PomoError{Error: "Empty Username"})
+		rest.Error(w, "Empty Username", http.StatusBadRequest)
 		return
 	}
-
 	// check password
 	if register.Password == "" {
-		w.WriteJson(&PomoError{Error: "Empty Password"})
+		rest.Error(w, "Empty Password", http.StatusBadRequest)
+		return
+	}
+	// check password against confirm
+	if register.Password != register.Confirm {
+		rest.Error(w, "Password mismatch", http.StatusBadRequest)
 		return
 	}
 
-	// check password against confirm
-	if register.Password != register.Confirm {
-		w.WriteJson(&PomoError{Error: "Passwords don't match"})
+	// check username DOESNT exist in datastore
+	auth := UserAuth{}
+	okusername := false
+	err = db.Where("username = ?", register.Username).First(&auth).Error
+	if err == gorm.RecordNotFound {
+		okusername = true
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	if !okusername {
+		rest.Error(w, "Username taken", http.StatusBadRequest)
+		return
+	}
+	log.Println("Username OK!!!")
+
+	okemail := false
+	err = db.Where("email = ?", register.Email).First(&auth).Error
+	if err == gorm.RecordNotFound {
+		okemail = true
+	} else if err != nil {
+		rest.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if !okemail {
+		rest.Error(w, "Email taken", http.StatusBadRequest)
+		return
+	}
+
+	log.Println("Email OK!!!")
 
 	// PREP data objects
 	uid := uuid.NewV4().String()
