@@ -14,5 +14,10 @@
 		    </div>
 	    </md-list>
 
+	    <div flex id="nada" ng-show="listCtrl.todos.length == 0" layout="column" layout-align="start center">
+	    	<p class="md-display-1">Nothing todo?</p>
+	    	<img src="{{listCtrl.urlString}}">
+	    </div>
+
 	</md-card>
 </div>

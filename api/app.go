@@ -6,8 +6,8 @@ import (
 
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jinzhu/gorm"
-	// _ "github.com/mattn/go-sqlite3"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3"
+	// _ "github.com/go-sql-driver/mysql"
 	// "github.com/rs/cors"
 )
 
@@ -16,7 +16,7 @@ const (
 	// creds := "user@cloudsql(project-id:instance-name)/dbname"
 
 	SQL_CREDS = "root:tomatoes@cloudsql(blue-pomodoros:dev)/data"
-	SQL_OPTS = "?parseTime=True&loc=UTC"
+	SQL_OPTS  = "?parseTime=True&loc=UTC"
 )
 
 var (
@@ -110,9 +110,9 @@ func init() {
 
 	// DB connection stuff
 	var err error
-	// db, err = gorm.Open("sqlite3", "pomopomo.db")
+	db, err = gorm.Open("sqlite3", "pomopomo.db")
 
-	db, err = gorm.Open("mysql", SQL_CREDS+SQL_OPTS)
+	// db, err = gorm.Open("mysql", SQL_CREDS+SQL_OPTS)
 	if err != nil {
 		panic(err)
 	}
@@ -123,7 +123,7 @@ func init() {
 
 }
 
-// func main() {
-// 	log.Println("pomopomo api serving on :8080")
-// 	log.Fatal(http.ListenAndServe(":8080", nil))
-// }
+func main() {
+	log.Println("pomopomo api serving on :8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
+}

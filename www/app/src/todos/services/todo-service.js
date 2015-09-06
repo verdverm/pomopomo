@@ -6,13 +6,20 @@ angular.module("pomodoroTodoApp")
 
     _instance.todos = [];
 
-    _instance.getAllTodos = getAllTodos;
+    _instance.numTodos = function() {
+        return _instance.todos.length;
+    }
+    _instance.getTodos = function() {
+        return _instance.todos;
+    }
+    _instance.loadTodos = getAllTodos;
     _instance.saveNewTodo = saveNewTodo;
     _instance.updateTodo = updateTodo;
     _instance.deleteTodo = deleteTodo;
     _instance.startPomo = startPomo;
     _instance.stopPomo = stopPomo;
 
+    
 
     function getAllTodos() {
         console.log("getting all todos")
@@ -60,10 +67,10 @@ angular.module("pomodoroTodoApp")
                     defer.reject(data.error);
                 } else {
                     
-                    _instance.todos.push(data.todo);
+                    _instance.todos.unshift(data.todo);
 
 
-                    defer.resolve(data);
+                    defer.resolve(data.todo);
                 }
             })
             .error(function(data, status, headers, config) {
