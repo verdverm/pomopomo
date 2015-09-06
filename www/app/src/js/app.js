@@ -1,10 +1,11 @@
 // API url
-var HOMEBASE = "http://localhost:8080"
+// var HOMEBASE = "http://localhost:8080"
+var HOMEBASE = "http://blue-pomodoros.appspot.com"
 
 
     angular
         .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngTouch', 'hmTouchEvents'])
-        
+
 
         .config(function($mdThemingProvider, $mdIconProvider, $httpProvider) {
             $httpProvider.defaults.useXDomain = true;
@@ -25,7 +26,7 @@ var HOMEBASE = "http://localhost:8080"
                 .accentPalette('amber');
 
         })
-        
+
 
         .run(function($rootScope, $state, $q, authService) {
 
@@ -40,7 +41,7 @@ var HOMEBASE = "http://localhost:8080"
                 // console.log("Deleting DB")
                 // deleteDB();
                 console.log("Migrating DB")
-                migrateDB();                
+                migrateDB();
             }
 
             // login with token if existant

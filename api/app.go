@@ -6,17 +6,17 @@ import (
 
 	"github.com/ant0ine/go-json-rest/rest"
 	"github.com/jinzhu/gorm"
-	_ "github.com/mattn/go-sqlite3"
-	"github.com/rs/cors"
+	// _ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
+	// "github.com/rs/cors"
 )
 
 const (
 	// creds := "cloudsql:my-instance*dbname/user/passwd"
 	// creds := "user@cloudsql(project-id:instance-name)/dbname"
 
-	SQL_CREDS = "root:njthesis@/sj_data"
-	// SQL_CREDS = "root@cloudsql(spotjams-api:sj-data-dev)/sj_data"
-	SQL_OPTS = "?charset=utf8&parseTime=True&loc=UTC"
+	SQL_CREDS = "root:tomatoes@cloudsql(blue-pomodoros:dev)/data"
+	SQL_OPTS = "?parseTime=True&loc=UTC"
 )
 
 var (
@@ -26,43 +26,39 @@ var (
 
 func init() {
 
-	static_cors_middleware := cors.New(cors.Options{
-		AllowedOrigins: []string{
-			"http://localhost:8080",
-			"http://192.168.1.8:8080",
-		},
-		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{
-			"Accept", "Content-Type", "X-Custom-Header", "Origin"},
-		AllowCredentials: true,
-		MaxAge:           3600,
-		// Debug:            true,
-	})
+	// static_cors_middleware := cors.New(cors.Options{
+	// 	AllowedOrigins: []string{
+	// 		"http://blue-pomodoros.appspot.com",
+	// 		"http://localhost:8080",
+	// 	},
+	// 	AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	// 	AllowedHeaders: []string{
+	// 		"Accept", "Content-Type", "X-Custom-Header", "Origin"},
+	// 	AllowCredentials: true,
+	// 	MaxAge:           3600,
+	// 	// Debug:            true,
+	// })
 
-	http.Handle("/", static_cors_middleware.Handler(http.FileServer(http.Dir("www"))))
+	// http.Handle("/", static_cors_middleware.Handler(http.FileServer(http.Dir("www"))))
+	http.Handle("/", http.FileServer(http.Dir("www")))
 
-	cors_middleware := rest.CorsMiddleware{
-		RejectNonCorsRequests: false,
-		AllowedMethods:        []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders: []string{
-			"Accept", "Content-Type", "X-Custom-Header", "Origin"},
-		AccessControlAllowCredentials: true,
-		AccessControlMaxAge:           3600,
-		OriginValidator: func(origin string, request *rest.Request) bool {
-			ok :=
-				origin == "http://localhost:8080" ||
-					origin == "http://192.168.1.8:8080"
-
-			// log.Println("ORIGIN: ", origin, "  ok: ", ok, request.Request)
-
-			return ok
-		},
-	}
+	// cors_middleware := rest.CorsMiddleware{
+	// 	RejectNonCorsRequests: false,
+	// 	AllowedMethods:        []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+	// 	AllowedHeaders: []string{
+	// 		"Accept", "Content-Type", "X-Custom-Header", "Origin"},
+	// 	AccessControlAllowCredentials: true,
+	// 	AccessControlMaxAge:           3600,
+	// 	OriginValidator: func(origin string, request *rest.Request) bool {
+	// 		ok := origin == "http://blue-pomodoros.appspot.com" || origin == "http://localhost:8080"
+	// 		return ok
+	// 	},
+	// }
 
 	// Login API router
 	login_api := rest.NewApi()
 	login_api.Use(rest.DefaultDevStack...)
-	login_api.Use(&cors_middleware)
+	// login_api.Use(&cors_middleware)
 
 	login_router, _ := rest.MakeRouter(
 		// &rest.Route{"GET", "/csrf", csrfHandler},
@@ -76,7 +72,7 @@ func init() {
 	// Main API router
 	main_api := rest.NewApi()
 	statusMw := &rest.StatusMiddleware{}
-	main_api.Use(&cors_middleware)
+	// main_api.Use(&cors_middleware)
 	main_api.Use(&jwt_middleware)
 	main_api.Use(statusMw)
 	main_api.Use(rest.DefaultDevStack...)
@@ -114,7 +110,9 @@ func init() {
 
 	// DB connection stuff
 	var err error
-	db, err = gorm.Open("sqlite3", "pomopomo.db")
+	// db, err = gorm.Open("sqlite3", "pomopomo.db")
+
+	db, err = gorm.Open("mysql", SQL_CREDS+SQL_OPTS)
 	if err != nil {
 		panic(err)
 	}
@@ -125,7 +123,7 @@ func init() {
 
 }
 
-func main() {
-	log.Println("pomopomo api serving on :8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
-}
+// func main() {
+// 	log.Println("pomopomo api serving on :8080")
+// 	log.Fatal(http.ListenAndServe(":8080", nil))
+// }

@@ -29,7 +29,7 @@
             <input id="register-confirm" ng-model="registerCtrl.creds.confirm" name="password" type="password" required style="font-size: 1.2em;" />
         </md-input-container>
 
-        <md-button class="md-raised md-primary md-hue-2" ng-click="registerCtrl.tryRegister($event)">
+        <md-button class="md-raised md-primary md-hue-2" hm-tap="registerCtrl.tryRegister($event)">
             Register
         </md-button>
 
