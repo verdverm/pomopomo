@@ -1,11 +1,14 @@
 angular.module("pomodoroTodoApp")
 
 .controller("LoginController",
-    function($rootScope, $scope, $state, authService) {
+    function($rootScope, $scope, $state, $mdToast, authService) {
 
         // var decls
         var self = this;
-        self.creds = {};
+        self.creds = {
+            username: "",
+            password: ""
+        };
 
         self.tryLogin = tryLogin;
 
@@ -17,8 +20,13 @@ angular.module("pomodoroTodoApp")
                 return;
             }
 
+            console.log(self.creds)
+
             // client-side validation
-            // ...?
+            if (self.creds.username == "" || self.creds.password == "") {
+                $mdToast.show($mdToast.simple().content("form has empty fields"));
+                return;
+            }
 
             authService.loginCreds(self.creds.username, self.creds.password)
             .then(
@@ -36,6 +44,7 @@ angular.module("pomodoroTodoApp")
                 function(error) {
                     console.log("error logging in: ", error)
                     self.creds.password = ""
+                    $mdToast.show($mdToast.simple().content("login failed :["));
                 });
 
         }

@@ -7,21 +7,21 @@
         <div layout="row">
             <md-input-container>
                 <label>Username</label>
-                <input id="login-username" ng-model="loginCtrl.creds.username" name="username" type="text" style="font-size: 1.2em;" />
+                <input id="login-username" ng-model="loginCtrl.creds.username" name="username" type="text" style="font-size: 1.2em;" required />
             </md-input-container>
         </div>
         <div layout="row">
             <md-input-container>
                 <label>Password</label>
-                <input id="login-password" ng-model="loginCtrl.creds.password" name="password" type="password" style="font-size: 1.2em;" />
+                <input id="login-password" ng-model="loginCtrl.creds.password" name="password" type="password" style="font-size: 1.2em;" required />
             </md-input-container>
         </div>
 
         <div layout="row" layout-align="center center">
-            <md-button class="md-raised md-primary md-hue-2" hm-tap="loginCtrl.tryLogin($event)">
+            <md-button id="login-btn" class="md-raised md-primary md-hue-2" hm-tap="loginCtrl.tryLogin($event)">
                 Login
             </md-button>
-            <md-button class="md-raised md-accent md-hue-3" ui-sref="register">
+            <md-button id="register-btn" class="md-raised md-accent md-hue-3" ui-sref="register">
                 Register
             </md-button>
         </div>

@@ -1,11 +1,16 @@
 angular.module("pomodoroTodoApp")
 
 .controller("RegisterController",
-    // function($scope, $location, authService, profileService) {
-    function($scope, $location, authService) {
+    function($scope, $location, $mdToast, authService) {
 
         var self = this;
         self.creds = {};
+        self.creds = {
+            username: "",
+            email: "",
+            password: "",
+            confirm: ""
+        };
 
         self.tryRegister = function(evt) {
             // ngMaterial has issues with multiple click events being fired right now
@@ -14,21 +19,21 @@ angular.module("pomodoroTodoApp")
                 return;
             }
 
+            // client-side validation
+            if (self.creds.username == "" || self.creds.email == "" || self.creds.password == "" || self.creds.confirm == "") {
+                $mdToast.show($mdToast.simple().content("form has empty fields"));
+                return;
+            }
+
             authService.register(self.creds,
                 function success(data) {
-                    var profile = data.profile;
-                    // compare here?
-                    // profileService.set(profile);
-                    // profileService.save();
-
                     $location.path("/main");
-
                 },
                 function(error) {
                     register.creds.password = "";
                     register.creds.confirm = "";
                     console.log("error: ", error);
-
+                    $mdToast.show($mdToast.simple().content("login failed :["));
                 });
 
         }
