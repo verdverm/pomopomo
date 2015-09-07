@@ -73,7 +73,7 @@ func GetAllTodos(w rest.ResponseWriter, req *rest.Request) {
 	uuid := getUuid(w, req)
 
 	todos := []UserTodo{}
-	err := db.Where("uuid = ?", uuid).Find(&todos).Error
+	err := db.Where("uuid = ?", uuid).Order("created_at desc").Find(&todos).Error
 	if err != nil {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -205,7 +205,7 @@ func UpdateTodo(w rest.ResponseWriter, req *rest.Request) {
 		rest.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if !unique {
+	if !unique && utodo.ID != todo.ID {
 		rest.Error(w, "name taken", http.StatusBadRequest)
 		return
 	}

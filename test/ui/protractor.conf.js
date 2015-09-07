@@ -2,9 +2,10 @@ exports.config = {
   allScriptsTimeout: 11000,
 
   specs: [
-    // './**/*.js'
+    // './scenarios/*.js'
     // './scenarios/home.js',
-    './scenarios/auth.js',
+    // './scenarios/auth.js',
+    './scenarios/todos.js',
   ],
 
   capabilities: {

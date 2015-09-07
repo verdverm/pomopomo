@@ -3,8 +3,8 @@
             <div class="md-toolbar-tools">
                 <h2>New Todo</h2>
                 <span flex></span>
-                <md-button class="md-icon-button" hm-tap="cancel()">
-                    <ng-md-icon icon="clear" aria-label="Close dialog">
+                <md-button class="md-icon-button" hm-tap="cancel()" aria-label="Close dialog">
+                    <ng-md-icon icon="clear">
                         </md-icon>
                 </md-button>
             </div>
@@ -13,20 +13,20 @@
             <div layout="column">
                 <md-input-container>
                     <label>Todo Name</label>
-                    <input ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
+                    <input id="new-todo-name-input" ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
                 </md-input-container>
                 <md-input-container>
                     <label>Description</label>
-                    <textarea ng-model="todo.Description" type="text" style="font-size: 1.2em;"></textarea>
+                    <textarea id="new-todo-description-input" ng-model="todo.Description" type="text" style="font-size: 1.2em;"></textarea>
                 </md-input-container>
             </div>
         </md-dialog-content>
         <div class="md-actions" layout="row">
             <span flex></span>
-            <md-button class="md-raised" hm-tap="cancel()">
+            <md-button id="cancel-btn" class="md-raised" aria-label="Close dialog" hm-tap="cancel()">
                 Cancel
             </md-button>
-            <md-button class="md-primary md-raised" hm-tap="create()" style="margin-right:20px;">
+            <md-button id="create-btn" class="md-primary md-raised" aria-label="Create Todo" hm-tap="create()" style="margin-right:20px;">
                 Create
             </md-button>
         </div>

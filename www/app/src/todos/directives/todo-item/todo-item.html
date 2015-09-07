@@ -8,9 +8,9 @@
 
 		<div flex="30" layout="column" layout-align="center center" layout-fill layout-margin>
 			<div layout="row" layout-align="space-around center">
-				<ng-md-icon icon="mode_edit"        size="40" style="fill: #005DC6" hm-tap="toggleEditing($event)"></ng-md-icon>
-				<ng-md-icon icon="alarm_add"        size="40" style="fill: #005DC6" hm-tap="createAlarm($event)"></ng-md-icon>
-				<ng-md-icon icon="highlight_remove" size="40" style="fill: #005DC6" hm-tap="deleteTodo($event)"></ng-md-icon>
+				<ng-md-icon icon="mode_edit"        class="todo-edit-btn" size="40" style="fill: #005DC6" hm-tap="toggleEditing($event)"></ng-md-icon>
+				<ng-md-icon icon="alarm_add"        class="todo-alarm-btn" size="40" style="fill: #005DC6" hm-tap="createAlarm($event)"></ng-md-icon>
+				<ng-md-icon icon="highlight_remove" class="todo-delete-btn" size="40" style="fill: #005DC6" hm-tap="deleteTodo($event)"></ng-md-icon>
 			</div>
 			<span class="md-title">Pomodoros: {{todo.PomodoroCompleted}}</span>
 			<span flex></span>
@@ -25,17 +25,17 @@
 	<md-card class="item_details" layout="column" layout-padding ng-show="showEditable">
 	    <div layout="row">
 	    	<span flex="70"></span>
-	    	<md-button class="md-raised md-primary" hm-tap="updateTodo($event)">
+	    	<md-button class="update-btn" class="md-raised md-primary" hm-tap="updateTodo($event)">
 	    		Update
 	    	</md-button>
 	    </div>
 		<md-input-container>
             <label>Todo Name</label>
-            <input ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
+            <input class="todo-update-name-input" ng-model="todo.Name" type="text" style="font-size: 1.2em;" />
         </md-input-container>
 		<md-input-container>
             <label>Description</label>
-            <textarea ng-model="todo.Description" type="text" style="font-size: 1.2em;" />
+            <textarea class="todo-update-description-input" ng-model="todo.Description" type="text" style="font-size: 1.2em;" />
         </md-input-container>
 	</md-card>
 

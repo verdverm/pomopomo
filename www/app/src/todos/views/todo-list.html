@@ -4,7 +4,7 @@
 	    <div layout="row" layout-align="center center" class="md-whiteframe-z1" style="background: rgb(33, 150, 243); color: white;" layout-padding>
 	        <span class="md-title">Todo Items</span>
 	        <span flex></span>
-	        <ng-md-icon icon="add_circle_outline" size="32" style="fill: white;" hm-tap="listCtrl.newTodo($event)"></ng-md-icon>
+	        <ng-md-icon id="new-todo-btn" icon="add_circle_outline" size="32" style="fill: white;" hm-tap="listCtrl.newTodo($event)"></ng-md-icon>
 	    </div>
 
 	    <md-list layout="column" layout-align="start center" layout-fill>
@@ -15,7 +15,7 @@
 	    </md-list>
 
 	    <div flex id="nada" ng-show="listCtrl.todos.length == 0" layout="column" layout-align="start center">
-	    	<p class="md-display-1">Nothing todo?</p>
+	    	<p class="md-display-1">Nothing todo?!</p>
 	    	<img src="{{listCtrl.urlString}}">
 	    </div>
 
