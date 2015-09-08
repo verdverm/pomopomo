@@ -1,6 +1,6 @@
 // API url
-var HOMEBASE = "http://localhost:8080"
-// var HOMEBASE = "http://blue-pomodoros.appspot.com"
+// var HOMEBASE = "http://localhost:8080"
+var HOMEBASE = "http://blue-pomodoros.appspot.com"
 
 
     angular

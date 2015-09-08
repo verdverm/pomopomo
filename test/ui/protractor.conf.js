@@ -12,7 +12,7 @@ exports.config = {
     'browserName': 'chrome'
   },
 
-  baseUrl: 'http://localhost:8080',
+  baseUrl: 'http://blue-pomodoros.appspot.com',
 
   seleniumAddress:'http://127.0.0.1:4444/wd/hub',
 

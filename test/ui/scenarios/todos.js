@@ -22,7 +22,7 @@ describe('todo manipulations: ', function() {
         // remove any current todos for the test user
         var deleteTodos = function() {
             todos.count().then(function(cnt){
-                console.log("TODOS COUNT: ", cnt);
+                // console.log("TODOS COUNT: ", cnt);
 
                 if ( cnt > 0 ) {
                     // browser.driver.wait(function() {
