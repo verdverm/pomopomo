@@ -4,17 +4,19 @@ import (
 	"log"
 	"net/http"
 
+	"appengine"
+
 	"github.com/ant0ine/go-json-rest/rest"
-	"github.com/jinzhu/gorm"
-	// _ "github.com/mattn/go-sqlite3"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jinzhu/gorm"
 	// "github.com/rs/cors"
 )
 
 const (
 	// creds := "user@cloudsql(project-id:instance-name)/dbname"
-	SQL_CREDS = "root:tomatoes@cloudsql(blue-pomodoros:dev)/data"
-	SQL_OPTS  = "?parseTime=True&loc=UTC"
+	DEV_SQL_CREDS = "root@/pomodoros_dev"
+	GAE_SQL_CREDS = "root:tomatoes@cloudsql(blue-pomodoros:dev)/data"
+	SQL_OPTS      = "?parseTime=True&loc=UTC"
 )
 
 var (
@@ -108,9 +110,13 @@ func init() {
 	http.Handle("/api/", http.StripPrefix("/api", main_api.MakeHandler()))
 
 	// DB connection stuff
+
 	var err error
-	// db, err = gorm.Open("sqlite3", "pomopomo.db")
-	db, err = gorm.Open("mysql", SQL_CREDS+SQL_OPTS)
+	if appengine.IsDevAppServer() {
+		db, err = gorm.Open("mysql", DEV_SQL_CREDS+SQL_OPTS)
+	} else {
+		db, err = gorm.Open("mysql", GAE_SQL_CREDS+SQL_OPTS)
+	}
 	if err != nil {
 		panic(err)
 	}

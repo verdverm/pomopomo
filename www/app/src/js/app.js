@@ -1,7 +1,9 @@
 // API url
 // var HOMEBASE = "http://localhost:8080"
-var HOMEBASE = "http://blue-pomodoros.appspot.com"
+// var HOMEBASE = "http://blue-pomodoros.appspot.com"
 
+// console.log(window.location);
+var HOMEBASE = window.location.origin;
 
     angular
         .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngTouch', 'hmTouchEvents'])
