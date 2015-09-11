@@ -23,9 +23,16 @@ angular.module("pomodoroTodoApp")
             console.log(self.creds)
 
             // client-side validation
-            if (self.creds.username == "" || self.creds.password == "") {
-                $mdToast.show($mdToast.simple().content("form has empty fields"));
-                return;
+            var invalid = false;
+            if (self.creds.username == "" ) {
+                invalid = true;
+            }
+            if (self.creds.password == "") {
+                invalid = true;
+            }
+
+            if (invalid) {
+                return
             }
 
             authService.loginCreds(self.creds.username, self.creds.password)

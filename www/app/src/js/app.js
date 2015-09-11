@@ -6,7 +6,7 @@
 var HOMEBASE = window.location.origin;
 
     angular
-        .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngTouch', 'hmTouchEvents'])
+        .module('pomodoroTodoApp', ['ui.router', 'ngMaterial', 'ngMdIcons', 'ngMessages', 'ngTouch', 'hmTouchEvents'])
 
 
         .config(function($mdThemingProvider, $mdIconProvider, $httpProvider) {

@@ -2,23 +2,38 @@
 
     <h1>Register</h1>
 
-    <form ng-submit="registerCtrl.tryRegister($event)" layout="column" layout-align="start center">
+    <form ng-submit="registerCtrl.tryRegister($event)" name="registerForm">
 
         <md-input-container>
             <label>Username</label>
             <input id="register-username" ng-model="registerCtrl.creds.username" name="username" type="text" required style="font-size: 1.2em;" />
+            <div ng-messages="registerForm.username.$error" ng-if="registerForm.username.$dirty">
+                <div ng-message="required">This field is required.</div>
+                <div ng-message="usernameAvailable">The email address is already in use...</div>
+            </div>
         </md-input-container>
         <md-input-container>
             <label>Email</label>
             <input id="register-email" ng-model="registerCtrl.creds.email" name="email" type="email" required style="font-size: 1.2em;" />
+            <div ng-messages="registerForm.email.$error" ng-if="registerForm.email.$dirty">
+                <div ng-message="required">This field is required.</div>
+                <div ng-message="email">Your field has an invalid email address</div>
+                <div ng-message="emailAvailable">The email address is already in use...</div>
+            </div>
         </md-input-container>
         <md-input-container>
             <label>Password</label>
             <input id="register-password" ng-model="registerCtrl.creds.password" name="password" type="password" required style="font-size: 1.2em;" />
+            <div ng-messages="registerForm.password.$error" ng-if="registerForm.password.$dirty">
+                <div ng-message="required">This field is required.</div>
+            </div>
         </md-input-container>
         <md-input-container>
             <label>Password Confirm</label>
-            <input id="register-confirm" ng-model="registerCtrl.creds.confirm" name="password" type="password" required style="font-size: 1.2em;" />
+            <input id="register-confirm" ng-model="registerCtrl.creds.confirm" name="confirm" type="password" required style="font-size: 1.2em;" />
+            <div ng-messages="registerForm.confirm.$error" ng-if="registerForm.confirm.$dirty">
+                <div ng-message="required">This field is required.</div>
+            </div>
         </md-input-container>
 
         <md-button id="register-btn" class="md-raised md-primary md-hue-2" hm-tap="registerCtrl.tryRegister($event)">

@@ -12,6 +12,14 @@ angular.module("pomodoroTodoApp")
             confirm: ""
         };
 
+        // function setAsLoading(bool) {
+        //     ngModel.$setValidity('recordLoading', !bool);
+        // }
+
+        // function setAsAvailable(bool) {
+        //     ngModel.$setValidity('recordAvailable', bool);
+        // }
+
         self.tryRegister = function(evt) {
             // ngMaterial has issues with multiple click events being fired right now
             var pass = clickbuster.onClick(event);
@@ -33,7 +41,7 @@ angular.module("pomodoroTodoApp")
                     register.creds.password = "";
                     register.creds.confirm = "";
                     console.log("error: ", error);
-                    $mdToast.show($mdToast.simple().content("login failed :["));
+                    $mdToast.show($mdToast.simple().content("registering failed :["));
                 });
 
         }
