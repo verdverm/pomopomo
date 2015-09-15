@@ -1,11 +1,13 @@
 var frisby = require('frisby');
-var auth = require("./auth_data");
+
+var UUID = process.env.UUID;
+var TOKEN = process.env.TOKEN;
 
 var URL = 'http://localhost:8080/api/';
 
 frisby.globalSetup({ // globalSetup is for ALL requests
   request: {
-    headers: { 'Authorization': 'Bearer ' + auth.TOKEN }
+    headers: { 'Authorization': 'Bearer ' + TOKEN }
   }
 });
 
