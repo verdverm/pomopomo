@@ -1,11 +1,11 @@
 #!/bin/bash
 
-set -ev 
+set -e 
 
 echo "Running API tests"
-echo "TRAVIS = ${TRAVIS}, ${CI}"
+# echo "TRAVIS = ${TRAVIS}, ${CI}"
 
-jasmine-node auth_spec.js
+go run auth_spec.go
 
 ### set UUID / TOKEN env variable from a successful login
 (
@@ -22,7 +22,6 @@ rm response.txt
 export UUID
 export TOKEN
 
-
-jasmine-node first_spec.js 
-jasmine-node lotsa_spec.js 
-jasmine-node pomos_spec.js 
+go run first_spec.go 
+go run lotsa_spec.go 
+go run pomos_spec.go 
