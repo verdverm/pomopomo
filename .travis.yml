@@ -1,6 +1,4 @@
-language: node_js
-node_js:
-  - "0.12"
+language: go
 
 notifications:
   email: false
@@ -10,6 +8,7 @@ branches:
     - master
     - develop
     - /^release-.*$/
+    - new-test-system
 
 services:
   - redis
@@ -27,8 +26,6 @@ before_install:
   - mkdir -p ./gocode/src ./gocode/bin ./gocode/pkg
 
 install:
-  - npm install -g jasmine-node 
-  - npm install --save-dev frisby
   - wget https://storage.googleapis.com/appengine-sdks/featured/go_appengine_sdk_linux_amd64-1.9.26.zip -nv
   - unzip -q go_appengine_sdk_linux_amd64-1.9.26.zip
   - ./install-go-deps.sh

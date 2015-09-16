@@ -16,3 +16,6 @@ set -e
 
 go get github.com/jinzhu/gorm
 
+go get github.com/mozillazg/request
+go get github.com/bitly/go-simplejson
+go get github.com/verdverm/frisby
