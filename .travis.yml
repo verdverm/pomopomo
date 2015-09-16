@@ -8,7 +8,6 @@ branches:
     - master
     - develop
     - /^release-.*$/
-    - new-test-system
 
 services:
   - redis
@@ -32,12 +31,11 @@ install:
 
 script:
   # start up the dev server and create DB tables
-  - ./go_appengine/goapp serve api/ > goapp.out &
+  - ./go_appengine/goapp serve api/ &
   - sleep 6
   - curl http://localhost:8080/auth/createtables
   # Test the API
   - cd test/api 
   - ./run.sh
-  - cat goapp.out
 
 # Testing the UI needs a browser ? some posts on selenium
