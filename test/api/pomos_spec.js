@@ -1,11 +1,13 @@
 var frisby = require('frisby');
-var auth = require("./auth_data");
+
+var UUID = process.env.UUID;
+var TOKEN = process.env.TOKEN;
 
 var URL = 'http://localhost:8080/api/';
 
 frisby.globalSetup({ // globalSetup is for ALL requests
   request: {
-    headers: { 'Authorization': 'Bearer ' + auth.TOKEN }
+    headers: { 'Authorization': 'Bearer ' + TOKEN }
   }
 });
 
@@ -33,7 +35,7 @@ frisby.create('POST new todo')
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: auth.UUID,
+        Uuid: UUID,
         Name: 'test pomos todo'
       })
     .toss();
@@ -52,7 +54,7 @@ frisby.create('POST new todo')
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: auth.UUID,
+        Uuid: UUID,
         PomodoroStarted: 1
       })
     .toss();
@@ -71,7 +73,7 @@ frisby.create('POST new todo')
       .expectStatus(200)
       .expectJSON({
         id: tid,
-        Uuid: auth.UUID,
+        Uuid: UUID,
         PomodoroStarted: 1,
         PomodoroCompleted: 0,
         PomodoroCount: 0

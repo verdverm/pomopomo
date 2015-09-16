@@ -1,7 +1,10 @@
 # pomopomo
-Pomodoro Todo Application
 
-live at: blue-pomodoros.appspot.com
+A Pomodoro Todo Application
+
+[![Build Status](https://travis-ci.org/verdverm/pomopomo.svg?branch=develop)](https://travis-ci.org/verdverm/pomopomo)
+
+[blue-pomodoros.appspot.com](http://blue-pomodoros.appspot.com)
 
 
 ### Tech stack
