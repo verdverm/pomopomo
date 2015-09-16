@@ -5,6 +5,7 @@ import (
 	"reflect"
 
 	"github.com/bitly/go-simplejson"
+	"github.com/verdverm/frisby"
 )
 
 var (
