@@ -113,6 +113,7 @@ func init() {
 
 	var err error
 	if appengine.IsDevAppServer() {
+		log.Println("Connecting to Dev DB")
 		db, err = gorm.Open("mysql", DEV_SQL_CREDS+SQL_OPTS)
 	} else {
 		db, err = gorm.Open("mysql", GAE_SQL_CREDS+SQL_OPTS)

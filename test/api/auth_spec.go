@@ -33,8 +33,7 @@ func main() {
 			AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
 			UUID, _ = json.Get("uid").String()
 			TOKEN, _ = json.Get("token").String()
-		}).
-			PrintReport()
+		})
 	}
 
 	creds := map[string]string{
@@ -47,8 +46,7 @@ func main() {
 		Send().
 		ExpectStatus(200).
 		ExpectJsonType("uid", reflect.String).
-		ExpectJson("uid", UUID).
-		PrintReport()
+		ExpectJson("uid", UUID)
 
 	bad_username := map[string]string{
 		"username": "test2",
@@ -59,8 +57,7 @@ func main() {
 		SetJson(bad_username).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "login failure").
-		PrintReport()
+		ExpectJson("Error", "login failure")
 
 	bad_password := map[string]string{
 		"username": "test",
@@ -71,8 +68,7 @@ func main() {
 		SetJson(bad_password).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "login failure").
-		PrintReport()
+		ExpectJson("Error", "login failure")
 
 	regi := map[string]string{
 		"username": "test",
@@ -85,8 +81,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Username taken").
-		PrintReport()
+		ExpectJson("Error", "Username taken")
 
 	regi["username"] = "test2"
 	frisby.Create("Test email conflict at registration").
@@ -94,8 +89,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Email taken").
-		PrintReport()
+		ExpectJson("Error", "Email taken")
 
 	regi["email"] = "test2@domain.com"
 	regi["confirm"] = "confirm"
@@ -104,8 +98,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Password mismatch").
-		PrintReport()
+		ExpectJson("Error", "Password mismatch")
 
 	regi["username"] = ""
 	regi["confirm"] = "password"
@@ -114,8 +107,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Empty Username").
-		PrintReport()
+		ExpectJson("Error", "Empty Username")
 
 	regi["email"] = ""
 	regi["username"] = "test2"
@@ -124,8 +116,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Empty Email").
-		PrintReport()
+		ExpectJson("Error", "Empty Email")
 
 	regi["email"] = "test2@domain.com"
 	regi["password"] = ""
@@ -135,6 +126,7 @@ func main() {
 		SetJson(regi).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "Empty Password").
-		PrintReport()
+		ExpectJson("Error", "Empty Password")
+
+	frisby.Global.PrintReport()
 }

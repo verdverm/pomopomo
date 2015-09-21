@@ -19,19 +19,18 @@ var (
 func main() {
 	UUID = os.Getenv("UUID")
 	TOKEN = os.Getenv("TOKEN")
+	frisby.Global.SetHeader("Authorization", "Bearer "+TOKEN)
 
 	frisby.Create("Test token login").
 		Get(URL+"auth_test").
-		SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(200).
 		ExpectJsonType("authed", reflect.String).
-		ExpectJson("authed", UUID).
-		PrintReport()
+		ExpectJson("authed", UUID)
 
 	frisby.Create("GET all todos").
-		Get(URL+"todo").
-		SetHeader("Authorization", "Bearer "+TOKEN).
+		Get(URL + "todo").
+		// SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(200).
 		AfterJson(func(F *frisby.Frisby, json *simplejson.Json, err error) {
@@ -40,9 +39,9 @@ func main() {
 		for _, t := range todos {
 			todo := t.(map[string]interface{})
 			todo_id := todo["id"].(gojson.Number).String()
-			f := frisby.Create("Delete todo "+todo_id).
-				Delete(URL+"todo/"+todo_id).
-				SetHeader("Authorization", "Bearer "+TOKEN).
+			f := frisby.Create("Delete todo " + todo_id).
+				Delete(URL + "todo/" + todo_id).
+				// SetHeader("Authorization", "Bearer "+TOKEN).
 				Send().
 				ExpectStatus(200)
 
@@ -50,24 +49,20 @@ func main() {
 				F.AddError("Deleting Todo " + todo_id + " " + e.Error())
 			}
 		}
-	}).
-		PrintReport()
+	})
 
 	frisby.Create("GET non-existant todo").
 		Get(URL+"todo/0").
-		SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(400).
-		ExpectJson("Error", "todo not found").
-		PrintReport()
+		ExpectJson("Error", "todo not found")
 
 	frisby.Create("GET all todos (empty)").
 		Get(URL+"todo").
-		SetHeader("Authorization", "Bearer "+TOKEN).
+		// SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(200).
-		ExpectJson("", []interface{}{}).
-		PrintReport()
+		ExpectJson("", []interface{}{})
 
 	new_todo := map[string]string{
 		"name":        "test todo",
@@ -77,7 +72,6 @@ func main() {
 	todo_id_int := 0
 	frisby.Create("POST new todo").
 		Post(URL+"todo").
-		SetHeader("Authorization", "Bearer "+TOKEN).
 		SetJson(new_todo).
 		Send().
 		ExpectStatus(200).
@@ -92,26 +86,23 @@ func main() {
 		}
 		todo_id = fmt.Sprint(todo_id_int)
 
-	}).
-		PrintReport()
+	})
 
 	frisby.Create("GET existing todo by id").
 		Get(URL+"todo/"+todo_id).
-		SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(200).
 		ExpectJson("id", todo_id_int).
 		ExpectJson("Uuid", UUID).
-		ExpectJson("Name", "test todo").
-		PrintReport()
+		ExpectJson("Name", "test todo")
 
 	frisby.Create("DELETE existing todo by id").
 		Delete(URL+"todo/"+todo_id).
-		SetHeader("Authorization", "Bearer "+TOKEN).
 		Send().
 		ExpectStatus(200).
 		ExpectJson("result", "success!").
-		ExpectJson("tid", todo_id_int).
-		PrintReport()
+		ExpectJson("tid", todo_id_int)
+
+	frisby.Global.PrintReport()
 
 }

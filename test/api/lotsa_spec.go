@@ -18,6 +18,7 @@ var (
 func main() {
 	UUID = os.Getenv("UUID")
 	TOKEN = os.Getenv("TOKEN")
+	frisby.Global.SetHeader("Authorization", "Bearer "+TOKEN)
 
 	new_todo := map[string]string{
 		"name":        "lotsatodo #",
@@ -51,7 +52,6 @@ func main() {
 
 		})
 	}
-	POST.PrintReport()
 
 	for i := 0; i < NUM_TODOS; i++ {
 		todo_id := todo_ids[i]
@@ -67,5 +67,6 @@ func main() {
 			DELETE.AddError(e.Error())
 		}
 	}
-	DELETE.PrintReport()
+
+	frisby.Global.PrintReport()
 }
